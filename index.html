@@ -131,6 +131,7 @@ margin-top:15px;
 </div>
 
 <script>
+
 let historyData = JSON.parse(localStorage.getItem("history")||"[]");
 
 const ctx = document.getElementById("chart");
@@ -139,7 +140,6 @@ type: 'line',
 data: {
 labels: [],
 datasets: [{
-label: 'Results',
 data: [],
 borderColor: '#ff9f0a',
 backgroundColor: 'rgba(255,159,10,0.2)',
@@ -158,6 +158,10 @@ y:{display:false}
 }
 });
 
+function formatNumber(value){
+return Math.round(value).toLocaleString("de-DE");
+}
+
 function calc(){
 let d=+days.value||0;
 let h=+hours.value||0;
@@ -171,9 +175,9 @@ let seconds=(d*86400)+(h*3600)+(m*60);
 let base=(seconds/9)*u+man;
 let final=base*(1+(i/100));
 
-result.innerText="Result: "+final.toFixed(2);
+result.innerText="Result: "+formatNumber(final);
 
-historyData.unshift(final);
+historyData.unshift(Math.round(final));
 localStorage.setItem("history",JSON.stringify(historyData));
 
 updateChart();
@@ -189,11 +193,12 @@ chart.update();
 function updateStats(){
 let sum=historyData.reduce((a,b)=>a+b,0);
 stats.innerText="Calculations: "+historyData.length+
-"  •  Sum: "+sum.toFixed(2);
+"  •  Sum: "+formatNumber(sum);
 }
 
 updateChart();
 updateStats();
+
 </script>
 
 </body>
