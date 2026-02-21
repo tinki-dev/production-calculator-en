@@ -6,12 +6,14 @@
 <title>Production Calculator</title>
 
 <style>
-* { box-sizing: border-box; }
+*{box-sizing:border-box;}
 
 :root{
 --accent:#7FB9FF;
+--tint:rgba(127,185,255,0.08);
+--glow:rgba(127,185,255,0.15);
 --bg:#f2f2f7;
---card:rgba(255,255,255,0.7);
+--card:rgba(255,255,255,0.75);
 --text:#1c1c1e;
 --secondary:#8e8e93;
 --border:rgba(0,0,0,0.05);
@@ -20,7 +22,7 @@
 @media (prefers-color-scheme: dark){
 :root{
 --bg:#000;
---card:rgba(28,28,30,0.7);
+--card:rgba(28,28,30,0.75);
 --text:#fff;
 --secondary:#8e8e93;
 --border:rgba(255,255,255,0.08);
@@ -32,94 +34,105 @@ margin:0;
 font-family:-apple-system,BlinkMacSystemFont,sans-serif;
 background:var(--bg);
 color:var(--text);
-height:100vh;
+min-height:100dvh;
 display:flex;
 flex-direction:column;
-overflow:hidden;
 }
 
 .container{
 flex:1;
-padding:15px 20px 0 20px;
-overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:flex-start;
+padding:20px;
+padding-bottom:calc(90px + env(safe-area-inset-bottom));
+}
+
+.content{
+width:100%;
+max-width:420px;
+text-align:center;
 }
 
 h1{
-font-size:22px;
+font-size:24px;
 font-weight:600;
-margin:5px 0 12px 0;
+margin:0 0 16px 0;
 }
 
 .card{
 background:var(--card);
 backdrop-filter:blur(20px);
--webkit-backdrop-filter:blur(20px);
-border-radius:22px;
-padding:14px;
+border-radius:26px;
+padding:16px;
 border:1px solid var(--border);
-box-shadow:0 8px 30px rgba(0,0,0,0.05);
-transition:all .25s ease;
+box-shadow:0 12px 35px var(--glow);
+transition:.25s ease;
+background:linear-gradient(var(--tint),var(--card));
+}
+
+.modeBadge{
+display:inline-block;
+padding:6px 14px;
+border-radius:20px;
+font-size:12px;
+margin-bottom:10px;
+background:var(--tint);
+color:var(--accent);
+font-weight:600;
 }
 
 input{
 width:100%;
-padding:11px;
+padding:10px;
 margin-top:8px;
 border-radius:14px;
 border:1px solid var(--border);
 background:transparent;
 color:var(--text);
 font-size:14px;
+text-align:center;
 }
 
 button{
 width:100%;
 padding:12px;
-margin-top:10px;
-border-radius:16px;
+margin-top:12px;
+border-radius:18px;
 border:none;
 font-weight:600;
 background:var(--accent);
 color:#000;
-transition:all .15s ease;
+transition:.15s ease;
 }
 
 button:active{
-transform:scale(0.96);
-}
-
-.secondaryBtn{
-background:transparent;
-color:var(--accent);
-border:1px solid var(--accent);
+transform:scale(.96);
 }
 
 .result{
 font-size:22px;
 font-weight:700;
-text-align:center;
-margin-top:10px;
-transition:.2s ease;
+margin-top:12px;
 }
 
 .loss{
 font-size:12px;
-text-align:center;
 margin-top:5px;
 display:none;
-opacity:.8;
+color:var(--accent);
 }
 
 .toggleRow{
 display:flex;
 justify-content:space-between;
 align-items:center;
-margin-bottom:5px;
+margin-bottom:8px;
 }
 
 .switch{
 position:relative;
-width:44px;height:24px;
+width:46px;height:24px;
 }
 
 .switch input{display:none;}
@@ -147,17 +160,22 @@ background:var(--accent);
 }
 
 input:checked + .slider:before{
-transform:translateX(20px);
+transform:translateX(22px);
 }
 
 .tabBar{
-height:65px;
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:70px;
 background:var(--card);
 backdrop-filter:blur(20px);
-border-top:1px solid var(--border);
 display:flex;
 justify-content:space-around;
 align-items:center;
+border-top:1px solid var(--border);
+padding-bottom:env(safe-area-inset-bottom);
 }
 
 .tab{
@@ -165,7 +183,6 @@ flex:1;
 text-align:center;
 font-size:14px;
 color:var(--secondary);
-transition:.2s ease;
 }
 
 .tab.active{
@@ -173,37 +190,26 @@ color:var(--accent);
 font-weight:600;
 }
 
-.view{
+.view{display:none;}
+.view.active{display:block;}
+
+.infoOverlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.4);
 display:none;
-height:100%;
-opacity:0;
-transform:translateY(10px);
-transition:.25s ease;
+justify-content:center;
+align-items:center;
+padding:20px;
 }
 
-.view.active{
-display:block;
-opacity:1;
-transform:translateY(0);
-}
-
-.analyticsScroll{
-overflow:auto;
-height:100%;
-padding-bottom:20px;
-}
-
-.themeOption{
-padding:8px;
-margin-top:8px;
-border-radius:10px;
-border:1px solid var(--border);
-cursor:pointer;
-transition:.2s ease;
-}
-
-.themeOption:hover{
-opacity:.8;
+.infoBox{
+background:var(--card);
+backdrop-filter:blur(20px);
+padding:20px;
+border-radius:20px;
+max-width:350px;
+font-size:14px;
 }
 </style>
 </head>
@@ -211,6 +217,7 @@ opacity:.8;
 <body>
 
 <div class="container">
+<div class="content">
 
 <!-- CALCULATOR -->
 <div id="calculatorView" class="view active">
@@ -218,6 +225,8 @@ opacity:.8;
 <h1>Calculator</h1>
 
 <div class="card">
+
+<div id="modeBadge" class="modeBadge">Online Mode</div>
 
 <div class="toggleRow">
 <span>Online</span>
@@ -228,8 +237,7 @@ opacity:.8;
 <span>Offline</span>
 </div>
 
-<input type="number" id="days" placeholder="Days">
-<input type="number" id="hours" placeholder="Hours">
+<input type="number" id="hours" placeholder="Hours (max 7 offline)">
 <input type="number" id="minutes" placeholder="Minutes (optional)">
 <input type="number" id="units" placeholder="Units every 9 seconds">
 <input type="number" id="manual" placeholder="Manual units (optional)">
@@ -240,80 +248,86 @@ opacity:.8;
 <div class="result" id="result">Result: 0</div>
 <div class="loss" id="loss"></div>
 
-</div>
+<button onclick="showInfo()" style="margin-top:10px;background:transparent;color:var(--accent);">How it works</button>
 
+</div>
 </div>
 
 <!-- ANALYTICS -->
 <div id="analyticsView" class="view">
-
-<div class="analyticsScroll">
-
 <h1>Analytics</h1>
-
 <div class="card" id="analyticsContent"></div>
-
-<div class="card" style="margin-top:12px;">
-<button class="secondaryBtn" onclick="exportCSV()">Export CSV</button>
-<button class="secondaryBtn" onclick="clearAllData()">Clear Data</button>
-</div>
-
-</div>
-
 </div>
 
 <!-- SETTINGS -->
 <div id="settingsView" class="view">
-
 <h1>Settings</h1>
-
 <div class="card">
-<b>Theme</b>
-<div class="themeOption" onclick="setTheme('#7FB9FF')">Pastel Blue</div>
-<div class="themeOption" onclick="setTheme('#B8A4FF')">Pastel Purple</div>
-<div class="themeOption" onclick="setTheme('#FFB3D1')">Pastel Pink</div>
+<div onclick="setTheme('#7FB9FF')" class="modeBadge">Pastel Blue</div>
+<div onclick="setTheme('#B8A4FF')" class="modeBadge">Pastel Purple</div>
+<div onclick="setTheme('#FFB3D1')" class="modeBadge">Pastel Pink</div>
+</div>
 </div>
 
 </div>
-
 </div>
 
-<!-- TAB BAR -->
 <div class="tabBar">
 <div class="tab active" onclick="switchTab('calculator')">Calculator</div>
 <div class="tab" onclick="switchTab('analytics')">Analytics</div>
 <div class="tab" onclick="switchTab('settings')">Settings</div>
 </div>
 
+<div id="infoOverlay" class="infoOverlay" onclick="hideInfo()">
+<div class="infoBox">
+<b>How it works</b><br><br>
+• Assumes all offline upgrades are unlocked.<br>
+• Offline income capped at 7 hours.<br>
+• First 2h = 100% income.<br>
+• Hours 3–7 = 20% income.<br><br>
+Tap anywhere to close.
+</div>
+</div>
+
 <script>
 
 let historyData = JSON.parse(localStorage.getItem("history")||"[]");
 
-function format(v){ return Math.round(v).toLocaleString("de-DE"); }
+function format(v){return Math.round(v).toLocaleString("de-DE");}
 
 function switchMode(){
 if(modeToggle.checked){
 document.documentElement.style.setProperty('--accent','#B8A4FF');
-loss.style.color="#B8A4FF";
+document.documentElement.style.setProperty('--tint','rgba(184,164,255,0.08)');
+document.documentElement.style.setProperty('--glow','rgba(184,164,255,0.15)');
+modeBadge.innerText="Offline Mode";
 }else{
 document.documentElement.style.setProperty('--accent','#7FB9FF');
-loss.style.color="#7FB9FF";
+document.documentElement.style.setProperty('--tint','rgba(127,185,255,0.08)');
+document.documentElement.style.setProperty('--glow','rgba(127,185,255,0.15)');
+modeBadge.innerText="Online Mode";
 }
 }
 
 function calc(){
 
-let d=+days.value||0,h=+hours.value||0,m=+minutes.value||0;
-let u=+units.value||0,man=+manual.value||0,i=+inc.value||0;
+let h=+hours.value||0;
+let m=+minutes.value||0;
+let u=+units.value||0;
+let man=+manual.value||0;
+let i=+inc.value||0;
 if(i>50)i=50;
 
-let seconds=(d*86400)+(h*3600)+(m*60);
+if(modeToggle.checked && h>7){
+h=7;
+hours.value=7;
+}
+
+let seconds=(h*3600)+(m*60);
 let online=(seconds/9)*u+man;
 let final=online;
-let mode="online";
 
 if(modeToggle.checked){
-mode="offline";
 let totalHours=Math.min(seconds/3600,7);
 let firstTwo=Math.min(totalHours,2);
 let remaining=Math.max(totalHours-2,0);
@@ -321,7 +335,7 @@ let full=(firstTwo*3600/9)*u;
 let reduced=(remaining*3600/9)*u*0.2;
 final=full+reduced+man;
 loss.style.display="block";
-loss.innerText="Loss vs Online: "+format(online-final);
+loss.innerText="Offline capped at 7h";
 }else{
 loss.style.display="none";
 }
@@ -329,9 +343,8 @@ loss.style.display="none";
 final=final*(1+(i/100));
 result.innerText="Result: "+format(final);
 
-historyData.unshift({mode:mode,result:Math.round(final)});
+historyData.unshift({result:Math.round(final)});
 localStorage.setItem("history",JSON.stringify(historyData));
-
 updateAnalytics();
 }
 
@@ -340,11 +353,9 @@ if(!historyData.length){
 analyticsContent.innerHTML="No data yet.";
 return;
 }
-
 let total=historyData.length;
 let sum=historyData.reduce((a,b)=>a+(b.result||0),0);
 let avg=sum/total;
-
 analyticsContent.innerHTML=`
 Total Calculations: ${total}<br>
 Total Production: ${format(sum)}<br>
@@ -352,44 +363,19 @@ Average: ${format(avg)}
 `;
 }
 
-function exportCSV(){
-let csv="Mode,Result\n";
-historyData.forEach(v=>{csv+=v.mode+","+v.result+"\n";});
-let blob=new Blob([csv],{type:"text/csv"});
-let a=document.createElement("a");
-a.href=URL.createObjectURL(blob);
-a.download="production-history.csv";
-a.click();
-}
-
-function clearAllData(){
-if(confirm("Delete all history?")){
-historyData=[];
-localStorage.setItem("history","[]");
-updateAnalytics();
-}
-}
-
 function switchTab(tab){
 document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
 document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+if(tab==="calculator"){calculatorView.classList.add("active");document.querySelectorAll(".tab")[0].classList.add("active");}
+if(tab==="analytics"){analyticsView.classList.add("active");document.querySelectorAll(".tab")[1].classList.add("active");}
+if(tab==="settings"){settingsView.classList.add("active");document.querySelectorAll(".tab")[2].classList.add("active");}
+}
 
-if(tab==="calculator"){
-calculatorView.classList.add("active");
-document.querySelectorAll(".tab")[0].classList.add("active");
-}
-if(tab==="analytics"){
-analyticsView.classList.add("active");
-document.querySelectorAll(".tab")[1].classList.add("active");
-}
-if(tab==="settings"){
-settingsView.classList.add("active");
-document.querySelectorAll(".tab")[2].classList.add("active");
-}
-}
+function showInfo(){infoOverlay.style.display="flex";}
+function hideInfo(){infoOverlay.style.display="none";}
+function setTheme(color){document.documentElement.style.setProperty('--accent',color);}
 
 updateAnalytics();
-
 </script>
 
 </body>
