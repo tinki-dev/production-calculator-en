@@ -4,25 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Production Calculator</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
+* { box-sizing: border-box; }
+
 :root{
---accent:#ff9f0a;
+--accent:#7FB9FF;
 --bg:#f2f2f7;
---card:rgba(255,255,255,0.9);
+--card:rgba(255,255,255,0.7);
 --text:#1c1c1e;
 --secondary:#8e8e93;
---border:#e5e5ea;
+--border:rgba(0,0,0,0.05);
 }
 
 @media (prefers-color-scheme: dark){
 :root{
---bg:#000000;
---card:rgba(28,28,30,0.9);
---text:#ffffff;
+--bg:#000;
+--card:rgba(28,28,30,0.7);
+--text:#fff;
 --secondary:#8e8e93;
---border:#2c2c2e;
+--border:rgba(255,255,255,0.08);
 }
 }
 
@@ -31,45 +32,61 @@ margin:0;
 font-family:-apple-system,BlinkMacSystemFont,sans-serif;
 background:var(--bg);
 color:var(--text);
-padding:env(safe-area-inset-top) 20px calc(env(safe-area-inset-bottom) + 80px);
-transition:.3s;
+height:100vh;
+display:flex;
+flex-direction:column;
+overflow:hidden;
 }
 
-.container{max-width:520px;margin:auto;}
-h1{font-size:24px;font-weight:600;margin-top:10px;}
+.container{
+flex:1;
+padding:15px 20px 0 20px;
+overflow:hidden;
+}
+
+h1{
+font-size:22px;
+font-weight:600;
+margin:5px 0 12px 0;
+}
 
 .card{
-backdrop-filter:blur(30px);
 background:var(--card);
-border-radius:24px;
-padding:18px;
-margin-top:16px;
+backdrop-filter:blur(20px);
+-webkit-backdrop-filter:blur(20px);
+border-radius:22px;
+padding:14px;
 border:1px solid var(--border);
+box-shadow:0 8px 30px rgba(0,0,0,0.05);
+transition:all .25s ease;
 }
 
 input{
 width:100%;
-padding:14px;
-margin-top:10px;
-border-radius:16px;
+padding:11px;
+margin-top:8px;
+border-radius:14px;
 border:1px solid var(--border);
 background:transparent;
 color:var(--text);
+font-size:14px;
 }
 
 button{
 width:100%;
-padding:14px;
-margin-top:12px;
-border-radius:18px;
+padding:12px;
+margin-top:10px;
+border-radius:16px;
 border:none;
 font-weight:600;
 background:var(--accent);
-color:black;
-transition:.15s;
+color:#000;
+transition:all .15s ease;
 }
 
-button:active{transform:scale(0.97);}
+button:active{
+transform:scale(0.96);
+}
 
 .secondaryBtn{
 background:transparent;
@@ -78,36 +95,31 @@ border:1px solid var(--accent);
 }
 
 .result{
-font-size:26px;
+font-size:22px;
 font-weight:700;
 text-align:center;
 margin-top:10px;
+transition:.2s ease;
 }
 
 .loss{
-font-size:13px;
-color:#ff3b30;
+font-size:12px;
 text-align:center;
+margin-top:5px;
 display:none;
-}
-
-.stats{
-font-size:14px;
-color:var(--secondary);
-text-align:center;
-margin-top:6px;
+opacity:.8;
 }
 
 .toggleRow{
 display:flex;
 justify-content:space-between;
 align-items:center;
-margin-top:10px;
+margin-bottom:5px;
 }
 
 .switch{
 position:relative;
-width:50px;height:28px;
+width:44px;height:24px;
 }
 
 .switch input{display:none;}
@@ -116,14 +128,14 @@ width:50px;height:28px;
 position:absolute;
 inset:0;
 background:#ccc;
-border-radius:34px;
+border-radius:20px;
 transition:.3s;
 }
 
 .slider:before{
 content:"";
 position:absolute;
-height:22px;width:22px;
+height:18px;width:18px;
 left:3px;bottom:3px;
 background:white;
 border-radius:50%;
@@ -135,21 +147,17 @@ background:var(--accent);
 }
 
 input:checked + .slider:before{
-transform:translateX(22px);
+transform:translateX(20px);
 }
 
 .tabBar{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-height:70px;
+height:65px;
 background:var(--card);
-backdrop-filter:blur(30px);
+backdrop-filter:blur(20px);
+border-top:1px solid var(--border);
 display:flex;
 justify-content:space-around;
 align-items:center;
-border-top:1px solid var(--border);
 }
 
 .tab{
@@ -157,7 +165,7 @@ flex:1;
 text-align:center;
 font-size:14px;
 color:var(--secondary);
-cursor:pointer;
+transition:.2s ease;
 }
 
 .tab.active{
@@ -165,22 +173,38 @@ color:var(--accent);
 font-weight:600;
 }
 
-.view{display:none;}
-.view.active{display:block;}
+.view{
+display:none;
+height:100%;
+opacity:0;
+transform:translateY(10px);
+transition:.25s ease;
+}
+
+.view.active{
+display:block;
+opacity:1;
+transform:translateY(0);
+}
+
+.analyticsScroll{
+overflow:auto;
+height:100%;
+padding-bottom:20px;
+}
 
 .themeOption{
-padding:10px;
-border-radius:12px;
+padding:8px;
 margin-top:8px;
+border-radius:10px;
 border:1px solid var(--border);
 cursor:pointer;
+transition:.2s ease;
 }
 
-.themeOption.active{
-border:2px solid var(--accent);
+.themeOption:hover{
+opacity:.8;
 }
-
-canvas{margin-top:15px;}
 </style>
 </head>
 
@@ -198,7 +222,7 @@ canvas{margin-top:15px;}
 <div class="toggleRow">
 <span>Online</span>
 <label class="switch">
-<input type="checkbox" id="modeToggle">
+<input type="checkbox" id="modeToggle" onchange="switchMode()">
 <span class="slider"></span>
 </label>
 <span>Offline</span>
@@ -212,16 +236,10 @@ canvas{margin-top:15px;}
 <input type="number" id="inc" placeholder="Increase % (max 50)">
 
 <button onclick="calc()">Calculate</button>
-<button class="secondaryBtn" onclick="shareResult()">Share</button>
 
 <div class="result" id="result">Result: 0</div>
 <div class="loss" id="loss"></div>
 
-</div>
-
-<div class="card">
-<div class="stats" id="mainStats"></div>
-<button class="secondaryBtn" onclick="exportCSV()">Export CSV</button>
 </div>
 
 </div>
@@ -229,9 +247,18 @@ canvas{margin-top:15px;}
 <!-- ANALYTICS -->
 <div id="analyticsView" class="view">
 
+<div class="analyticsScroll">
+
 <h1>Analytics</h1>
 
 <div class="card" id="analyticsContent"></div>
+
+<div class="card" style="margin-top:12px;">
+<button class="secondaryBtn" onclick="exportCSV()">Export CSV</button>
+<button class="secondaryBtn" onclick="clearAllData()">Clear Data</button>
+</div>
+
+</div>
 
 </div>
 
@@ -241,28 +268,10 @@ canvas{margin-top:15px;}
 <h1>Settings</h1>
 
 <div class="card">
-
 <b>Theme</b>
-
-<div class="themeOption" onclick="setTheme('orange')">Orange</div>
-<div class="themeOption" onclick="setTheme('blue')">Blue</div>
-<div class="themeOption" onclick="setTheme('graphite')">Graphite</div>
-<div class="themeOption" onclick="setTheme('emerald')">Emerald</div>
-
-</div>
-
-<div class="card">
-
-<div class="toggleRow">
-<span>Haptic Feedback</span>
-<label class="switch">
-<input type="checkbox" id="hapticToggle" checked>
-<span class="slider"></span>
-</label>
-</div>
-
-<button class="secondaryBtn" onclick="clearAllData()">Clear All Data</button>
-
+<div class="themeOption" onclick="setTheme('#7FB9FF')">Pastel Blue</div>
+<div class="themeOption" onclick="setTheme('#B8A4FF')">Pastel Purple</div>
+<div class="themeOption" onclick="setTheme('#FFB3D1')">Pastel Pink</div>
 </div>
 
 </div>
@@ -278,18 +287,21 @@ canvas{margin-top:15px;}
 
 <script>
 
-let historyData=JSON.parse(localStorage.getItem("history")||"[]");
+let historyData = JSON.parse(localStorage.getItem("history")||"[]");
 
-function haptic(){
-if(document.getElementById("hapticToggle").checked && navigator.vibrate){
-navigator.vibrate(10);
+function format(v){ return Math.round(v).toLocaleString("de-DE"); }
+
+function switchMode(){
+if(modeToggle.checked){
+document.documentElement.style.setProperty('--accent','#B8A4FF');
+loss.style.color="#B8A4FF";
+}else{
+document.documentElement.style.setProperty('--accent','#7FB9FF');
+loss.style.color="#7FB9FF";
 }
 }
-
-function format(v){return Math.round(v).toLocaleString("de-DE");}
 
 function calc(){
-haptic();
 
 let d=+days.value||0,h=+hours.value||0,m=+minutes.value||0;
 let u=+units.value||0,man=+manual.value||0,i=+inc.value||0;
@@ -320,13 +332,7 @@ result.innerText="Result: "+format(final);
 historyData.unshift({mode:mode,result:Math.round(final)});
 localStorage.setItem("history",JSON.stringify(historyData));
 
-updateMainStats();
 updateAnalytics();
-}
-
-function updateMainStats(){
-let sum=historyData.reduce((a,b)=>a+b.result,0);
-mainStats.innerText="Calculations: "+historyData.length+" • Sum: "+format(sum);
 }
 
 function updateAnalytics(){
@@ -334,29 +340,16 @@ if(!historyData.length){
 analyticsContent.innerHTML="No data yet.";
 return;
 }
+
 let total=historyData.length;
-let sum=historyData.reduce((a,b)=>a+b.result,0);
+let sum=historyData.reduce((a,b)=>a+(b.result||0),0);
 let avg=sum/total;
-let best=Math.max(...historyData.map(x=>x.result));
-let low=Math.min(...historyData.map(x=>x.result));
 
 analyticsContent.innerHTML=`
 Total Calculations: ${total}<br>
 Total Production: ${format(sum)}<br>
-Average: ${format(avg)}<br>
-Best: ${format(best)}<br>
-Lowest: ${format(low)}
+Average: ${format(avg)}
 `;
-}
-
-function shareResult(){
-if(!historyData.length)return;
-haptic();
-let last=historyData[0];
-navigator.share?.({
-title:"Production Result",
-text:"Mode: "+last.mode+"\nResult: "+format(last.result)
-});
 }
 
 function exportCSV(){
@@ -373,21 +366,8 @@ function clearAllData(){
 if(confirm("Delete all history?")){
 historyData=[];
 localStorage.setItem("history","[]");
-updateMainStats();
 updateAnalytics();
 }
-}
-
-function setTheme(theme){
-haptic();
-let accent={
-orange:"#ff9f0a",
-blue:"#0a84ff",
-graphite:"#8e8e93",
-emerald:"#34c759"
-};
-document.documentElement.style.setProperty('--accent',accent[theme]);
-localStorage.setItem("theme",theme);
 }
 
 function switchTab(tab){
@@ -408,10 +388,6 @@ document.querySelectorAll(".tab")[2].classList.add("active");
 }
 }
 
-let savedTheme=localStorage.getItem("theme");
-if(savedTheme) setTheme(savedTheme);
-
-updateMainStats();
 updateAnalytics();
 
 </script>
