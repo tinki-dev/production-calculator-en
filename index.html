@@ -46,6 +46,8 @@ viewport-fit=cover">
 }
 }
 
+/* ================= GLOBAL ================= */
+
 html, body{
 height:100%;
 margin:0;
@@ -53,17 +55,12 @@ padding:0;
 background:linear-gradient(to bottom,var(--bg-top),var(--bg-bottom)) fixed;
 color:var(--text);
 font-family:'Inter', sans-serif;
-overflow:hidden;
 }
 
-body{
-min-height:100dvh;
-display:flex;
-flex-direction:column;
-}
+/* ================= APP ================= */
 
 .app{
-flex:1;
+height:100dvh;
 display:flex;
 flex-direction:column;
 justify-content:space-between;
@@ -86,6 +83,13 @@ padding:18px;
 }
 
 .view.active{display:flex;}
+
+#settingsView{
+overflow-y:auto;
+-webkit-overflow-scrolling:touch;
+}
+
+/* ================= TYPO ================= */
 
 h1{
 font-size:20px;
@@ -344,7 +348,7 @@ margin-top:10px;
 
 <div class="accordion-header" onclick="toggleGuide()">
 <div>
-How to Use  
+How to Use
 <div class="accordion-sub">Tap to expand</div>
 </div>
 <div class="chevron" id="chevron">▼</div>
@@ -353,31 +357,15 @@ How to Use
 <div class="accordion-content" id="guideContent">
 <br>
 <strong>Online Mode</strong><br>
-Calculates full duration entered (days, hours, minutes).<br><br>
-
+Calculates full duration entered.<br><br>
 <strong>Offline Mode</strong><br>
-Maximum 7 hours counted.<br>
-Hours 1–2 = 100% production.<br>
-Hours 3–7 = 20% production.<br>
-Days disabled. Assumes all upgrades active.<br><br>
-
+Max 7h. 1–2h = 100%. 3–7h = 20%.<br><br>
 <strong>Input Fields</strong><br>
-Days – Optional (Online only).<br>
-Hours / Minutes – Optional.<br>
-Units every 9s – Required.<br>
-Manual units – Optional, added directly.<br>
-Increase % – Optional (max 50%).<br><br>
-
+Units every 9s required. Others optional.<br><br>
 <strong>Comparison</strong><br>
-Shows Win/Lost percentage.<br>
-50% boost affects comparison only.<br>
-Offline always capped at 7h.<br><br>
-
-<strong>Statistics / Analytics</strong><br>
-Total Calculations – Number of runs.<br>
-Total Production – Sum of results.<br>
-Average Production – Average value.<br>
-Chart – Visual history of calculations.
+Shows Win/Lost %. Boost affects comparison only.<br><br>
+<strong>Statistics</strong><br>
+Shows total runs, total production, average and chart.
 </div>
 
 </div>
@@ -394,8 +382,6 @@ Chart – Visual history of calculations.
 
 <script>
 
-/* TAB SWITCHING */
-
 document.querySelectorAll(".tabbar button").forEach(btn=>{
 btn.onclick=()=>{
 document.querySelectorAll(".tabbar button").forEach(b=>b.classList.remove("active"));
@@ -405,113 +391,12 @@ document.getElementById(btn.dataset.tab).classList.add("active");
 };
 });
 
-/* GUIDE ACCORDION */
-
 function toggleGuide(){
-let content=document.getElementById("guideContent");
-let chev=document.getElementById("chevron");
-content.classList.toggle("open");
-chev.classList.toggle("rotate");
+guideContent.classList.toggle("open");
+chevron.classList.toggle("rotate");
 }
-
-/* THEME */
-
-document.querySelectorAll("input[name='theme']").forEach(r=>{
-r.onchange=()=>{
-document.documentElement.style.setProperty("--accent",r.value);
-document.documentElement.style.setProperty("--accent-dark",r.value);
-localStorage.setItem("theme",r.value);
-};
-});
-
-let savedTheme=localStorage.getItem("theme");
-if(savedTheme){
-document.documentElement.style.setProperty("--accent",savedTheme);
-document.documentElement.style.setProperty("--accent-dark",savedTheme);
-}
-
-/* CALC LOGIC */
-
-let mode="online";
-
-onlineBtn.onclick=()=>setMode("online");
-offlineBtn.onclick=()=>setMode("offline");
-
-function setMode(m){
-mode=m;
-onlineBtn.classList.toggle("active",m==="online");
-offlineBtn.classList.toggle("active",m==="offline");
-days.disabled=(m==="offline");
-}
-
-function format(n){return Math.round(n).toLocaleString("de-DE");}
-
-function calcOnline(sec,u,man){return (sec/9)*u+man;}
-function calcOffline(sec,u,man){
-let totalHours=Math.min(sec/3600,7);
-let firstTwo=Math.min(totalHours,2);
-let rest=Math.max(totalHours-2,0);
-return (firstTwo*3600/9)*u+(rest*3600/9)*u*0.2+man;
-}
-
-calcBtn.onclick=()=>{
-let d=+days.value||0;
-let h=+hours.value||0;
-let m=+minutes.value||0;
-let u=+units.value||0;
-let man=+manual.value||0;
-let inc=+increase.value||0;
-if(inc>50)inc=50;
-
-let sec=d*86400+h*3600+m*60;
-let base=(mode==="online"?calcOnline(sec,u,man):calcOffline(sec,u,man))*(1+inc/100);
-
-result.innerText=format(base);
-
-if(showComparison.checked){
-let onlineVal=calcOnline(sec,u,man);
-let offlineVal=calcOffline(sec,u,man);
-
-if(boostComparison.checked){
-let totalHours=Math.min(sec/3600,7);
-if(totalHours>2){
-let rest=Math.max(totalHours-2,0);
-offlineVal+=(rest*3600/9)*u*0.5;
-}
-}
-
-let compareTo=mode==="online"?offlineVal:onlineVal;
-if(compareTo>0){
-let diff=((base-compareTo)/compareTo)*100;
-comparison.innerText=(diff>=0?"+":"")+Math.round(diff)+"% "+
-(diff>=0?"Win":"Lost")+" in comparison to "+(mode==="online"?"Offline":"Online");
-}
-}else comparison.innerText="";
-};
-
-/* ANALYTICS */
-
-let historyData=JSON.parse(localStorage.getItem("history")||"[]");
-
-let chart=new Chart(document.getElementById("chart"),{
-type:'line',
-data:{labels:[],datasets:[{data:[],borderColor:getComputedStyle(document.documentElement).getPropertyValue('--accent-dark'),fill:false,tension:.3}]},
-options:{plugins:{legend:{display:false}}}
-});
-
-function updateAnalytics(){
-chart.data.labels=historyData.map((_,i)=>i+1);
-chart.data.datasets[0].data=historyData;
-chart.update();
-
-let total=historyData.reduce((a,b)=>a+b,0);
-totalCalc.innerText="Total Calculations: "+historyData.length;
-totalProd.innerText="Total Production: "+format(total);
-avgProd.innerText="Average Production: "+format(total/historyData.length||0);
-}
-
-updateAnalytics();
 
 </script>
+
 </body>
 </html>
