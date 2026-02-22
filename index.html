@@ -15,7 +15,7 @@ viewport-fit=cover">
 
 <title>Production Planner</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
@@ -23,30 +23,28 @@ viewport-fit=cover">
 /* ================= ROOT ================= */
 
 :root{
---accent:#7FB9FF;
---accent-dark:#5A8CDC;
---bg-top:#EEF3FF;
---bg-bottom:#F6F8FF;
---glass:rgba(255,255,255,0.65);
---glass-strong:rgba(255,255,255,0.9);
---border:rgba(255,255,255,0.4);
---text:#2c2c2c;
---muted:#666;
+--accent:#AEB4C2;
+--accent-dark:#8F96A6;
+--bg-top:#EEF1F5;
+--bg-bottom:#F6F8FB;
+--glass:rgba(255,255,255,0.75);
+--glass-strong:rgba(255,255,255,0.95);
+--border:rgba(0,0,0,0.06);
+--text:#1E1E1E;
+--muted:#777;
 }
 
 @media (prefers-color-scheme: dark){
 :root{
---bg-top:#11121A;
---bg-bottom:#1A1B2A;
---glass:rgba(28,28,40,0.6);
---glass-strong:rgba(35,35,55,0.85);
---border:rgba(255,255,255,0.08);
---text:#EAEAF5;
---muted:#A0A0B5;
+--bg-top:#111217;
+--bg-bottom:#1A1C22;
+--glass:rgba(30,32,38,0.65);
+--glass-strong:rgba(40,42,50,0.9);
+--border:rgba(255,255,255,0.06);
+--text:#F1F1F1;
+--muted:#9A9A9A;
 }
 }
-
-/* ================= GLOBAL ================= */
 
 html, body{
 height:100%;
@@ -54,7 +52,7 @@ margin:0;
 padding:0;
 background:linear-gradient(to bottom,var(--bg-top),var(--bg-bottom)) fixed;
 color:var(--text);
-font-family:'Playfair Display', serif;
+font-family:'Inter', sans-serif;
 overflow:hidden;
 }
 
@@ -63,8 +61,6 @@ min-height:100dvh;
 display:flex;
 flex-direction:column;
 }
-
-/* ================= APP ================= */
 
 .app{
 flex:1;
@@ -86,40 +82,30 @@ display:none;
 flex-direction:column;
 align-items:center;
 justify-content:center;
-padding:20px 18px 0 18px;
-animation:fade .25s ease;
+padding:18px;
 }
 
 .view.active{display:flex;}
 
-@keyframes fade{
-from{opacity:0}
-to{opacity:1}
-}
-
-/* ================= TYPO ================= */
-
 h1{
-font-size:22px;
+font-size:20px;
 font-weight:600;
 color:var(--accent-dark);
 }
 
 .subtitle{
 font-size:12px;
-margin-top:4px;
-opacity:.75;
 color:var(--muted);
+margin-top:4px;
 }
 
 /* ================= SEGMENT ================= */
 
 .segment{
-margin-top:16px;
+margin-top:14px;
 display:flex;
 background:var(--glass);
-border-radius:30px;
-backdrop-filter:blur(20px);
+border-radius:24px;
 border:1px solid var(--border);
 overflow:hidden;
 }
@@ -129,9 +115,9 @@ flex:1;
 padding:6px;
 border:none;
 background:none;
-cursor:pointer;
+font-size:13px;
 color:var(--text);
-font-size:14px;
+cursor:pointer;
 }
 
 .segment button.active{
@@ -139,59 +125,49 @@ background:var(--glass-strong);
 color:var(--accent-dark);
 }
 
-.mode{
-margin-top:4px;
-font-size:11px;
-font-style:italic;
-color:var(--muted);
-}
-
 /* ================= CARD ================= */
 
 .card{
-margin-top:16px;
+margin-top:14px;
 width:100%;
 background:var(--glass);
-border-radius:22px;
-backdrop-filter:blur(20px);
+border-radius:18px;
 border:1px solid var(--border);
-padding:14px;
+padding:12px;
 display:flex;
 flex-direction:column;
-gap:8px;
+gap:6px;
 }
 
 input{
 padding:6px;
-border-radius:10px;
+border-radius:8px;
 border:none;
 background:var(--glass-strong);
+font-size:13px;
 text-align:center;
-color:var(--text);
-font-size:14px;
 }
-
-input:disabled{opacity:.4;}
 
 button.calc{
 padding:6px;
 border:none;
-border-radius:16px;
+border-radius:12px;
 background:var(--accent);
 color:white;
+font-size:13px;
 cursor:pointer;
 }
 
 .result{
-margin-top:6px;
-font-size:22px;
-font-weight:700;
-color:var(--accent-dark);
+margin-top:4px;
+font-size:18px;
+font-weight:600;
 text-align:center;
+color:var(--accent-dark);
 }
 
 .comparison{
-font-size:12px;
+font-size:11px;
 text-align:center;
 color:var(--muted);
 }
@@ -199,31 +175,29 @@ color:var(--muted);
 /* ================= FLOATING TABBAR ================= */
 
 .tabbar-wrapper{
-padding-bottom:20px;
-padding-top:10px;
+padding-bottom:22px;
 }
 
 .tabbar{
-width:90%;
+width:88%;
 margin:0 auto;
-height:55px;
+height:48px;
 display:flex;
 justify-content:space-around;
 align-items:center;
 background:var(--glass);
-border-radius:25px;
-backdrop-filter:blur(20px);
+border-radius:20px;
 border:1px solid var(--border);
-box-shadow:0 8px 20px rgba(0,0,0,0.1);
+box-shadow:0 4px 14px rgba(0,0,0,0.08);
 }
 
 .tabbar button{
 flex:1;
 border:none;
 background:none;
-cursor:pointer;
+font-size:13px;
 color:var(--muted);
-font-size:14px;
+cursor:pointer;
 }
 
 .tabbar button.active{
@@ -233,19 +207,20 @@ color:var(--accent-dark);
 /* ================= SETTINGS ================= */
 
 .section-title{
-margin-top:20px;
-font-size:14px;
-opacity:.6;
+margin-top:18px;
+font-size:12px;
+font-weight:600;
+color:var(--muted);
 }
 
 .setting-row{
 width:100%;
-padding:10px 0;
+padding:8px 0;
 display:flex;
 justify-content:space-between;
 align-items:center;
 border-bottom:1px solid var(--border);
-font-size:14px;
+font-size:13px;
 }
 
 .setting-row:last-child{border:none;}
@@ -254,16 +229,57 @@ font-size:14px;
 accent-color:var(--accent-dark);
 }
 
-canvas{margin-top:15px;}
+/* Accordion */
+
+.accordion-header{
+margin-top:18px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+cursor:pointer;
+font-weight:600;
+font-size:13px;
+}
+
+.accordion-sub{
+font-size:11px;
+color:var(--muted);
+}
+
+.accordion-content{
+max-height:0;
+overflow:hidden;
+transition:max-height .3s ease;
+font-size:12px;
+color:var(--muted);
+margin-top:8px;
+line-height:1.5;
+}
+
+.accordion-content.open{
+max-height:1000px;
+}
+
+.chevron{
+transition:transform .3s ease;
+}
+
+.chevron.rotate{
+transform:rotate(180deg);
+}
 
 .stat{
-margin-top:10px;
+margin-top:8px;
 background:var(--glass);
-border-radius:16px;
-padding:10px;
+border-radius:12px;
+padding:6px;
 text-align:center;
 border:1px solid var(--border);
-font-size:13px;
+font-size:12px;
+}
+
+canvas{
+margin-top:10px;
 }
 
 </style>
@@ -282,8 +298,6 @@ font-size:13px;
 <button id="offlineBtn">Offline</button>
 </div>
 
-<div class="mode" id="modeText">Online mode active</div>
-
 <div class="card">
 <input type="number" id="days" placeholder="Days">
 <input type="number" id="hours" placeholder="Hours">
@@ -300,7 +314,7 @@ font-size:13px;
 <!-- ANALYTICS -->
 <div id="analyticsView" class="view">
 <h1>Analytics</h1>
-<canvas id="chart" height="180"></canvas>
+<canvas id="chart" height="160"></canvas>
 <div class="stat" id="totalCalc"></div>
 <div class="stat" id="totalProd"></div>
 <div class="stat" id="avgProd"></div>
@@ -313,19 +327,58 @@ font-size:13px;
 <div class="section-title">Display</div>
 <div class="setting-row">
 <span>Show comparison</span>
-<input type="checkbox" id="showComparison">
+<input type="checkbox" id="showComparison" checked>
 </div>
 <div class="setting-row">
-<span>Apply 50% boost after hour 3</span>
+<span>Apply 50% boost (comparison only)</span>
 <input type="checkbox" id="boostComparison">
 </div>
 
 <div class="section-title">Appearance</div>
-<div class="setting-row"><span>Pastel Blue</span><input type="radio" name="theme" class="radio" value="#7FB9FF" checked></div>
+<div class="setting-row"><span>Pastel Grey (Default)</span><input type="radio" name="theme" class="radio" value="#AEB4C2" checked></div>
+<div class="setting-row"><span>Pastel Blue</span><input type="radio" name="theme" class="radio" value="#7FB9FF"></div>
 <div class="setting-row"><span>Pastel Pink</span><input type="radio" name="theme" class="radio" value="#FF9FB9"></div>
 <div class="setting-row"><span>Pastel Purple</span><input type="radio" name="theme" class="radio" value="#C3A6FF"></div>
 <div class="setting-row"><span>Pastel Orange</span><input type="radio" name="theme" class="radio" value="#FFB37F"></div>
 <div class="setting-row"><span>Pastel Yellow</span><input type="radio" name="theme" class="radio" value="#FFD97F"></div>
+
+<div class="accordion-header" onclick="toggleGuide()">
+<div>
+How to Use  
+<div class="accordion-sub">Tap to expand</div>
+</div>
+<div class="chevron" id="chevron">▼</div>
+</div>
+
+<div class="accordion-content" id="guideContent">
+<br>
+<strong>Online Mode</strong><br>
+Calculates full duration entered (days, hours, minutes).<br><br>
+
+<strong>Offline Mode</strong><br>
+Maximum 7 hours counted.<br>
+Hours 1–2 = 100% production.<br>
+Hours 3–7 = 20% production.<br>
+Days disabled. Assumes all upgrades active.<br><br>
+
+<strong>Input Fields</strong><br>
+Days – Optional (Online only).<br>
+Hours / Minutes – Optional.<br>
+Units every 9s – Required.<br>
+Manual units – Optional, added directly.<br>
+Increase % – Optional (max 50%).<br><br>
+
+<strong>Comparison</strong><br>
+Shows Win/Lost percentage.<br>
+50% boost affects comparison only.<br>
+Offline always capped at 7h.<br><br>
+
+<strong>Statistics / Analytics</strong><br>
+Total Calculations – Number of runs.<br>
+Total Production – Sum of results.<br>
+Average Production – Average value.<br>
+Chart – Visual history of calculations.
+</div>
 
 </div>
 
@@ -341,7 +394,7 @@ font-size:13px;
 
 <script>
 
-/* ================= TABS ================= */
+/* TAB SWITCHING */
 
 document.querySelectorAll(".tabbar button").forEach(btn=>{
 btn.onclick=()=>{
@@ -352,7 +405,16 @@ document.getElementById(btn.dataset.tab).classList.add("active");
 };
 });
 
-/* ================= THEME ================= */
+/* GUIDE ACCORDION */
+
+function toggleGuide(){
+let content=document.getElementById("guideContent");
+let chev=document.getElementById("chevron");
+content.classList.toggle("open");
+chev.classList.toggle("rotate");
+}
+
+/* THEME */
 
 document.querySelectorAll("input[name='theme']").forEach(r=>{
 r.onchange=()=>{
@@ -368,7 +430,7 @@ document.documentElement.style.setProperty("--accent",savedTheme);
 document.documentElement.style.setProperty("--accent-dark",savedTheme);
 }
 
-/* ================= CALC LOGIC ================= */
+/* CALC LOGIC */
 
 let mode="online";
 
@@ -379,7 +441,6 @@ function setMode(m){
 mode=m;
 onlineBtn.classList.toggle("active",m==="online");
 offlineBtn.classList.toggle("active",m==="offline");
-modeText.innerText=m==="online"?"Online mode active":"Offline mode active";
 days.disabled=(m==="offline");
 }
 
@@ -428,7 +489,29 @@ comparison.innerText=(diff>=0?"+":"")+Math.round(diff)+"% "+
 }else comparison.innerText="";
 };
 
-</script>
+/* ANALYTICS */
 
+let historyData=JSON.parse(localStorage.getItem("history")||"[]");
+
+let chart=new Chart(document.getElementById("chart"),{
+type:'line',
+data:{labels:[],datasets:[{data:[],borderColor:getComputedStyle(document.documentElement).getPropertyValue('--accent-dark'),fill:false,tension:.3}]},
+options:{plugins:{legend:{display:false}}}
+});
+
+function updateAnalytics(){
+chart.data.labels=historyData.map((_,i)=>i+1);
+chart.data.datasets[0].data=historyData;
+chart.update();
+
+let total=historyData.reduce((a,b)=>a+b,0);
+totalCalc.innerText="Total Calculations: "+historyData.length;
+totalProd.innerText="Total Production: "+format(total);
+avgProd.innerText="Average Production: "+format(total/historyData.length||0);
+}
+
+updateAnalytics();
+
+</script>
 </body>
 </html>
