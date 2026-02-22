@@ -13,7 +13,7 @@
 --tint:rgba(127,185,255,0.08);
 --glow:rgba(127,185,255,0.15);
 --bg:#f2f2f7;
---card:rgba(255,255,255,0.75);
+--card:rgba(255,255,255,0.8);
 --text:#1c1c1e;
 --secondary:#8e8e93;
 --border:rgba(0,0,0,0.05);
@@ -22,7 +22,7 @@
 @media (prefers-color-scheme: dark){
 :root{
 --bg:#000;
---card:rgba(28,28,30,0.75);
+--card:rgba(28,28,30,0.85);
 --text:#fff;
 --secondary:#8e8e93;
 --border:rgba(255,255,255,0.08);
@@ -61,25 +61,13 @@ margin:0 0 16px 0;
 }
 
 .card{
-background:var(--card);
+background:linear-gradient(var(--tint),var(--card));
 backdrop-filter:blur(20px);
 border-radius:26px;
 padding:16px;
 border:1px solid var(--border);
 box-shadow:0 12px 35px var(--glow);
 transition:.25s ease;
-background:linear-gradient(var(--tint),var(--card));
-}
-
-.modeBadge{
-display:inline-block;
-padding:6px 14px;
-border-radius:20px;
-font-size:12px;
-margin-bottom:10px;
-background:var(--tint);
-color:var(--accent);
-font-weight:600;
 }
 
 input{
@@ -110,24 +98,19 @@ button:active{
 transform:scale(.96);
 }
 
-.result{
-font-size:22px;
-font-weight:700;
-margin-top:12px;
+.resultBlock{
+margin-top:14px;
+font-size:14px;
 }
 
-.loss{
-font-size:12px;
-margin-top:5px;
-display:none;
-color:var(--accent);
+.highlight{
+font-weight:600;
 }
 
-.toggleRow{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:8px;
+.smallNote{
+font-size:11px;
+color:var(--secondary);
+margin-top:6px;
 }
 
 .switch{
@@ -192,25 +175,6 @@ font-weight:600;
 
 .view{display:none;}
 .view.active{display:block;}
-
-.infoOverlay{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.4);
-display:none;
-justify-content:center;
-align-items:center;
-padding:20px;
-}
-
-.infoBox{
-background:var(--card);
-backdrop-filter:blur(20px);
-padding:20px;
-border-radius:20px;
-max-width:350px;
-font-size:14px;
-}
 </style>
 </head>
 
@@ -226,18 +190,8 @@ font-size:14px;
 
 <div class="card">
 
-<div id="modeBadge" class="modeBadge">Online Mode</div>
-
-<div class="toggleRow">
-<span>Online</span>
-<label class="switch">
-<input type="checkbox" id="modeToggle" onchange="switchMode()">
-<span class="slider"></span>
-</label>
-<span>Offline</span>
-</div>
-
-<input type="number" id="hours" placeholder="Hours (max 7 offline)">
+<input type="number" id="days" placeholder="Days">
+<input type="number" id="hours" placeholder="Hours">
 <input type="number" id="minutes" placeholder="Minutes (optional)">
 <input type="number" id="units" placeholder="Units every 9 seconds">
 <input type="number" id="manual" placeholder="Manual units (optional)">
@@ -245,27 +199,45 @@ font-size:14px;
 
 <button onclick="calc()">Calculate</button>
 
-<div class="result" id="result">Result: 0</div>
-<div class="loss" id="loss"></div>
-
-<button onclick="showInfo()" style="margin-top:10px;background:transparent;color:var(--accent);">How it works</button>
-
-</div>
+<div class="resultBlock" id="resultBlock">
+Online: 0<br>
+Offline (max 7h): 0
 </div>
 
-<!-- ANALYTICS -->
-<div id="analyticsView" class="view">
-<h1>Analytics</h1>
-<div class="card" id="analyticsContent"></div>
+<div class="smallNote">
+Offline calculation is always capped at 7 hours.
+</div>
+
+</div>
 </div>
 
 <!-- SETTINGS -->
 <div id="settingsView" class="view">
 <h1>Settings</h1>
+
 <div class="card">
-<div onclick="setTheme('#7FB9FF')" class="modeBadge">Pastel Blue</div>
-<div onclick="setTheme('#B8A4FF')" class="modeBadge">Pastel Purple</div>
-<div onclick="setTheme('#FFB3D1')" class="modeBadge">Pastel Pink</div>
+
+<div style="display:flex;justify-content:space-between;align-items:center;">
+<span>Show Win / Lost %</span>
+<label class="switch">
+<input type="checkbox" id="percentToggle">
+<span class="slider"></span>
+</label>
+</div>
+
+<div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;">
+<span>Apply 50% comparison boost (offline)</span>
+<label class="switch">
+<input type="checkbox" id="boostToggle">
+<span class="slider"></span>
+</label>
+</div>
+
+<div class="smallNote">
+Applies only to the offline comparison value when calculating online.
+Does not change the actual offline calculation.
+</div>
+
 </div>
 </div>
 
@@ -274,43 +246,34 @@ font-size:14px;
 
 <div class="tabBar">
 <div class="tab active" onclick="switchTab('calculator')">Calculator</div>
-<div class="tab" onclick="switchTab('analytics')">Analytics</div>
 <div class="tab" onclick="switchTab('settings')">Settings</div>
-</div>
-
-<div id="infoOverlay" class="infoOverlay" onclick="hideInfo()">
-<div class="infoBox">
-<b>How it works</b><br><br>
-• Assumes all offline upgrades are unlocked.<br>
-• Offline income capped at 7 hours.<br>
-• First 2h = 100% income.<br>
-• Hours 3–7 = 20% income.<br><br>
-Tap anywhere to close.
-</div>
 </div>
 
 <script>
 
-let historyData = JSON.parse(localStorage.getItem("history")||"[]");
+let showPercent = localStorage.getItem("showPercent")==="true";
+let applyBoost = localStorage.getItem("applyBoost")==="true";
 
-function format(v){return Math.round(v).toLocaleString("de-DE");}
+percentToggle.checked = showPercent;
+boostToggle.checked = applyBoost;
 
-function switchMode(){
-if(modeToggle.checked){
-document.documentElement.style.setProperty('--accent','#B8A4FF');
-document.documentElement.style.setProperty('--tint','rgba(184,164,255,0.08)');
-document.documentElement.style.setProperty('--glow','rgba(184,164,255,0.15)');
-modeBadge.innerText="Offline Mode";
-}else{
-document.documentElement.style.setProperty('--accent','#7FB9FF');
-document.documentElement.style.setProperty('--tint','rgba(127,185,255,0.08)');
-document.documentElement.style.setProperty('--glow','rgba(127,185,255,0.15)');
-modeBadge.innerText="Online Mode";
-}
+percentToggle.addEventListener("change",function(){
+localStorage.setItem("showPercent",this.checked);
+showPercent=this.checked;
+});
+
+boostToggle.addEventListener("change",function(){
+localStorage.setItem("applyBoost",this.checked);
+applyBoost=this.checked;
+});
+
+function format(v){
+return Math.round(v).toLocaleString("de-DE");
 }
 
 function calc(){
 
+let d=+days.value||0;
 let h=+hours.value||0;
 let m=+minutes.value||0;
 let u=+units.value||0;
@@ -318,64 +281,66 @@ let man=+manual.value||0;
 let i=+inc.value||0;
 if(i>50)i=50;
 
-if(modeToggle.checked && h>7){
-h=7;
-hours.value=7;
-}
+let totalSeconds=(d*86400)+(h*3600)+(m*60);
 
-let seconds=(h*3600)+(m*60);
-let online=(seconds/9)*u+man;
-let final=online;
+// ONLINE
+let online=(totalSeconds/9)*u+man;
+let onlineBoosted=online*(1+(i/100));
 
-if(modeToggle.checked){
-let totalHours=Math.min(seconds/3600,7);
+// OFFLINE (real)
+let totalHours=Math.min(totalSeconds/3600,7);
 let firstTwo=Math.min(totalHours,2);
 let remaining=Math.max(totalHours-2,0);
+
 let full=(firstTwo*3600/9)*u;
 let reduced=(remaining*3600/9)*u*0.2;
-final=full+reduced+man;
-loss.style.display="block";
-loss.innerText="Offline capped at 7h";
-}else{
-loss.style.display="none";
+let offline=(full+reduced+man);
+
+// Boost only if enabled
+if(applyBoost){
+let boostedReduced=(remaining*3600/9)*u*0.3;
+offline=(full+boostedReduced+man);
 }
 
-final=final*(1+(i/100));
-result.innerText="Result: "+format(final);
+let offlineBoosted=offline*(1+(i/100));
 
-historyData.unshift({result:Math.round(final)});
-localStorage.setItem("history",JSON.stringify(historyData));
-updateAnalytics();
-}
-
-function updateAnalytics(){
-if(!historyData.length){
-analyticsContent.innerHTML="No data yet.";
-return;
-}
-let total=historyData.length;
-let sum=historyData.reduce((a,b)=>a+(b.result||0),0);
-let avg=sum/total;
-analyticsContent.innerHTML=`
-Total Calculations: ${total}<br>
-Total Production: ${format(sum)}<br>
-Average: ${format(avg)}
+let output=`
+Online: <span class="highlight">${format(onlineBoosted)}</span><br>
+Offline (max 7h): <span class="highlight">${format(offlineBoosted)}</span>
 `;
+
+if(showPercent){
+let percent=((offlineBoosted-onlineBoosted)/onlineBoosted)*100;
+let abs=Math.abs(percent).toFixed(1);
+
+let label="";
+if(percent>0){
+label=`Win +${abs}%`;
+}else if(percent<0){
+label=`Lost -${abs}%`;
+}else{
+label="Equal 0%";
+}
+
+output+=`<br><span class="highlight">${label}</span>`;
+}
+
+resultBlock.innerHTML=output;
 }
 
 function switchTab(tab){
 document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
 document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-if(tab==="calculator"){calculatorView.classList.add("active");document.querySelectorAll(".tab")[0].classList.add("active");}
-if(tab==="analytics"){analyticsView.classList.add("active");document.querySelectorAll(".tab")[1].classList.add("active");}
-if(tab==="settings"){settingsView.classList.add("active");document.querySelectorAll(".tab")[2].classList.add("active");}
+if(tab==="calculator"){
+calculatorView.classList.add("active");
+document.querySelectorAll(".tab")[0].classList.add("active");
+}
+if(tab==="settings"){
+settingsView.classList.add("active");
+document.querySelectorAll(".tab")[1].classList.add("active");
+}
 }
 
-function showInfo(){infoOverlay.style.display="flex";}
-function hideInfo(){infoOverlay.style.display="none";}
-function setTheme(color){document.documentElement.style.setProperty('--accent',color);}
-
-updateAnalytics();
 </script>
 
 </body>
