@@ -2,345 +2,366 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Production Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Production Planner</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-*{box-sizing:border-box;}
-
 :root{
 --accent:#7FB9FF;
---tint:rgba(127,185,255,0.08);
---glow:rgba(127,185,255,0.15);
---bg:#f2f2f7;
---card:rgba(255,255,255,0.8);
---text:#1c1c1e;
---secondary:#8e8e93;
---border:rgba(0,0,0,0.05);
+--accent-dark:#5A8CDC;
+--bg-top:#EEF3FF;
+--bg-bottom:#F6F8FF;
+--glass:rgba(255,255,255,0.65);
+--glass-strong:rgba(255,255,255,0.85);
+--border:rgba(255,255,255,0.4);
+--text:#2c2c2c;
+--muted:#666;
 }
 
 @media (prefers-color-scheme: dark){
 :root{
---bg:#000;
---card:rgba(28,28,30,0.85);
---text:#fff;
---secondary:#8e8e93;
+--accent:#9FA8FF;
+--accent-dark:#B8BFFF;
+--bg-top:#11121A;
+--bg-bottom:#1A1B2A;
+--glass:rgba(28,28,40,0.6);
+--glass-strong:rgba(35,35,55,0.85);
 --border:rgba(255,255,255,0.08);
+--text:#EAEAF5;
+--muted:#A0A0B5;
 }
 }
+
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Playfair Display', serif;}
 
 body{
-margin:0;
-font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-background:var(--bg);
-color:var(--text);
-min-height:100dvh;
-display:flex;
-flex-direction:column;
-}
-
-.container{
-flex:1;
+height:100vh;
+background:linear-gradient(to bottom,var(--bg-top),var(--bg-bottom));
 display:flex;
 justify-content:center;
-align-items:flex-start;
-padding:20px;
-padding-bottom:calc(90px + env(safe-area-inset-bottom));
+align-items:center;
+overflow:hidden;
+color:var(--text);
+transition:background .4s ease,color .4s ease;
 }
 
-.content{
-width:100%;
-max-width:420px;
-text-align:center;
+.app{
+width:390px;
+height:844px;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+position:relative;
+}
+
+.view{
+flex:1;
+display:none;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+padding:24px;
+animation:fadeSlide .35s cubic-bezier(.4,.0,.2,1);
+}
+
+.view.active{display:flex;}
+
+@keyframes fadeSlide{
+from{opacity:0;transform:translateY(14px);}
+to{opacity:1;transform:translateY(0);}
 }
 
 h1{
-font-size:24px;
+font-size:26px;
 font-weight:600;
-margin:0 0 16px 0;
+color:var(--accent-dark);
+letter-spacing:.4px;
+}
+
+.subtitle{
+margin-top:8px;
+font-size:14px;
+opacity:.75;
+color:var(--muted);
+}
+
+.segment{
+margin-top:24px;
+display:flex;
+background:var(--glass);
+border-radius:40px;
+backdrop-filter:blur(25px);
+border:1px solid var(--border);
+overflow:hidden;
+}
+
+.segment button{
+flex:1;
+padding:10px 18px;
+border:none;
+background:none;
+font-size:15px;
+cursor:pointer;
+transition:.2s ease;
+color:var(--text);
+}
+
+.segment button.active{
+background:var(--glass-strong);
+color:var(--accent-dark);
+}
+
+.segment button:active{transform:scale(.96);}
+
+.mode{
+margin-top:10px;
+font-size:12px;
+font-style:italic;
+color:var(--muted);
 }
 
 .card{
-background:linear-gradient(var(--tint),var(--card));
-backdrop-filter:blur(20px);
-border-radius:26px;
-padding:16px;
+margin-top:26px;
+width:100%;
+background:var(--glass);
+border-radius:28px;
+backdrop-filter:blur(28px);
 border:1px solid var(--border);
-box-shadow:0 12px 35px var(--glow);
-transition:.25s ease;
+padding:22px;
+display:flex;
+flex-direction:column;
+gap:12px;
 }
 
 input{
-width:100%;
 padding:10px;
-margin-top:8px;
 border-radius:14px;
-border:1px solid var(--border);
-background:transparent;
-color:var(--text);
-font-size:14px;
-text-align:center;
-}
-
-button{
-width:100%;
-padding:12px;
-margin-top:12px;
-border-radius:18px;
 border:none;
-font-weight:600;
-background:var(--accent);
-color:#000;
-transition:.15s ease;
-}
-
-button:active{
-transform:scale(.96);
-}
-
-.resultBlock{
-margin-top:14px;
-font-size:14px;
-}
-
-.highlight{
-font-weight:600;
-}
-
-.smallNote{
-font-size:11px;
-color:var(--secondary);
-margin-top:6px;
-}
-
-.switch{
-position:relative;
-width:46px;height:24px;
-}
-
-.switch input{display:none;}
-
-.slider{
-position:absolute;
-inset:0;
-background:#ccc;
-border-radius:20px;
-transition:.3s;
-}
-
-.slider:before{
-content:"";
-position:absolute;
-height:18px;width:18px;
-left:3px;bottom:3px;
-background:white;
-border-radius:50%;
-transition:.3s;
-}
-
-input:checked + .slider{
-background:var(--accent);
-}
-
-input:checked + .slider:before{
-transform:translateX(22px);
-}
-
-.tabBar{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-height:70px;
-background:var(--card);
-backdrop-filter:blur(20px);
-display:flex;
-justify-content:space-around;
-align-items:center;
-border-top:1px solid var(--border);
-padding-bottom:env(safe-area-inset-bottom);
-}
-
-.tab{
-flex:1;
+background:var(--glass-strong);
 text-align:center;
+color:var(--text);
+}
+
+input:disabled{opacity:.4;}
+
+button.calc{
+padding:10px;
+border:none;
+border-radius:24px;
+background:var(--accent);
+color:white;
+cursor:pointer;
+transition:.2s ease;
+}
+
+button.calc:active{transform:scale(.95);}
+
+.result{
+margin-top:12px;
+font-size:28px;
+font-weight:700;
+color:var(--accent-dark);
+text-align:center;
+transition:.25s ease;
+}
+
+.comparison{
+margin-top:6px;
 font-size:14px;
-color:var(--secondary);
+text-align:center;
+color:var(--muted);
 }
 
-.tab.active{
-color:var(--accent);
-font-weight:600;
+.tabbar{
+height:60px;
+display:flex;
+background:var(--glass);
+border-top:1px solid var(--border);
+backdrop-filter:blur(25px);
 }
 
-.view{display:none;}
-.view.active{display:block;}
+.tabbar button{
+flex:1;
+border:none;
+background:none;
+font-size:15px;
+cursor:pointer;
+transition:.2s;
+color:var(--muted);
+}
+
+.tabbar button.active{color:var(--accent-dark);}
+
+.stat{
+margin-top:14px;
+background:var(--glass);
+border-radius:20px;
+padding:16px;
+text-align:center;
+border:1px solid var(--border);
+}
+
+canvas{margin-top:20px;}
+
 </style>
 </head>
-
 <body>
 
-<div class="container">
-<div class="content">
+<div class="app">
 
 <!-- CALCULATOR -->
-<div id="calculatorView" class="view active">
+<div id="calcView" class="view active">
+<h1>Production Planner</h1>
+<div class="subtitle">Optimize your production flow</div>
 
-<h1>Calculator</h1>
+<div class="segment">
+<button id="onlineBtn" class="active">Online</button>
+<button id="offlineBtn">Offline</button>
+</div>
+
+<div class="mode" id="modeText">Online mode active</div>
 
 <div class="card">
-
 <input type="number" id="days" placeholder="Days">
 <input type="number" id="hours" placeholder="Hours">
-<input type="number" id="minutes" placeholder="Minutes (optional)">
-<input type="number" id="units" placeholder="Units every 9 seconds">
-<input type="number" id="manual" placeholder="Manual units (optional)">
-<input type="number" id="inc" placeholder="Increase % (max 50)">
-
-<button onclick="calc()">Calculate</button>
-
-<div class="resultBlock" id="resultBlock">
-Online: 0<br>
-Offline (max 7h): 0
+<input type="number" id="minutes" placeholder="Minutes">
+<input type="number" id="units" placeholder="Units every 9s">
+<input type="number" id="manual" placeholder="Manual units">
+<input type="number" id="increase" placeholder="Increase %">
+<button class="calc" id="calcBtn">Calculate</button>
+<div class="result" id="result">0</div>
+<div class="comparison" id="comparison"></div>
+</div>
 </div>
 
-<div class="smallNote">
-Offline calculation is always capped at 7 hours.
-</div>
-
-</div>
+<!-- ANALYTICS -->
+<div id="analyticsView" class="view">
+<h1>Analytics</h1>
+<canvas id="chart" height="200"></canvas>
+<div class="stat" id="totalCalc"></div>
+<div class="stat" id="totalProd"></div>
+<div class="stat" id="avgProd"></div>
 </div>
 
 <!-- SETTINGS -->
 <div id="settingsView" class="view">
 <h1>Settings</h1>
-
-<div class="card">
-
-<div style="display:flex;justify-content:space-between;align-items:center;">
-<span>Show Win / Lost %</span>
-<label class="switch">
-<input type="checkbox" id="percentToggle">
-<span class="slider"></span>
-</label>
+<div class="stat">
+<label><input type="checkbox" id="showComparison" checked> Show comparison</label>
 </div>
-
-<div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;">
-<span>Apply 50% comparison boost (offline)</span>
-<label class="switch">
-<input type="checkbox" id="boostToggle">
-<span class="slider"></span>
-</label>
-</div>
-
-<div class="smallNote">
-Applies only to the offline comparison value when calculating online.
-Does not change the actual offline calculation.
-</div>
-
+<div class="stat">
+<label><input type="checkbox" id="boostComparison"> Apply 50% comparison boost after hour 3</label>
 </div>
 </div>
 
-</div>
+<div class="tabbar">
+<button class="active" data-tab="calcView">Calculator</button>
+<button data-tab="analyticsView">Analytics</button>
+<button data-tab="settingsView">Settings</button>
 </div>
 
-<div class="tabBar">
-<div class="tab active" onclick="switchTab('calculator')">Calculator</div>
-<div class="tab" onclick="switchTab('settings')">Settings</div>
 </div>
 
 <script>
+let mode="online";
+let historyData=JSON.parse(localStorage.getItem("history")||"[]");
 
-let showPercent = localStorage.getItem("showPercent")==="true";
-let applyBoost = localStorage.getItem("applyBoost")==="true";
-
-percentToggle.checked = showPercent;
-boostToggle.checked = applyBoost;
-
-percentToggle.addEventListener("change",function(){
-localStorage.setItem("showPercent",this.checked);
-showPercent=this.checked;
+const tabs=document.querySelectorAll(".tabbar button");
+tabs.forEach(btn=>{
+btn.onclick=()=>{
+tabs.forEach(b=>b.classList.remove("active"));
+btn.classList.add("active");
+document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+document.getElementById(btn.dataset.tab).classList.add("active");
+};
 });
 
-boostToggle.addEventListener("change",function(){
-localStorage.setItem("applyBoost",this.checked);
-applyBoost=this.checked;
-});
+onlineBtn.onclick=()=>setMode("online");
+offlineBtn.onclick=()=>setMode("offline");
 
-function format(v){
-return Math.round(v).toLocaleString("de-DE");
+function setMode(m){
+mode=m;
+onlineBtn.classList.toggle("active",m==="online");
+offlineBtn.classList.toggle("active",m==="offline");
+modeText.innerText=m==="online"?"Online mode active":"Offline mode active";
+days.disabled=(m==="offline");
 }
 
-function calc(){
+function format(n){return Math.round(n).toLocaleString("de-DE");}
 
+function calculateOnline(sec,u,man){return (sec/9)*u+man;}
+function calculateOffline(sec,u,man){
+let totalHours=Math.min(sec/3600,7);
+let firstTwo=Math.min(totalHours,2);
+let rest=Math.max(totalHours-2,0);
+return (firstTwo*3600/9)*u+(rest*3600/9)*u*0.2+man;
+}
+
+calcBtn.onclick=()=>{
 let d=+days.value||0;
 let h=+hours.value||0;
 let m=+minutes.value||0;
 let u=+units.value||0;
 let man=+manual.value||0;
-let i=+inc.value||0;
-if(i>50)i=50;
+let inc=+increase.value||0;
+if(inc>50)inc=50;
 
-let totalSeconds=(d*86400)+(h*3600)+(m*60);
+let sec=d*86400+h*3600+m*60;
+let base=mode==="online"?calculateOnline(sec,u,man):calculateOffline(sec,u,man);
+base*=1+inc/100;
 
-// ONLINE
-let online=(totalSeconds/9)*u+man;
-let onlineBoosted=online*(1+(i/100));
+result.style.transform="scale(.97)";
+setTimeout(()=>result.style.transform="scale(1)",150);
+result.innerText=format(base);
 
-// OFFLINE (real)
-let totalHours=Math.min(totalSeconds/3600,7);
-let firstTwo=Math.min(totalHours,2);
-let remaining=Math.max(totalHours-2,0);
+if(showComparison.checked){
+let onlineVal=calculateOnline(sec,u,man);
+let offlineVal=calculateOffline(sec,u,man);
 
-let full=(firstTwo*3600/9)*u;
-let reduced=(remaining*3600/9)*u*0.2;
-let offline=(full+reduced+man);
-
-// Boost only if enabled
-if(applyBoost){
-let boostedReduced=(remaining*3600/9)*u*0.3;
-offline=(full+boostedReduced+man);
-}
-
-let offlineBoosted=offline*(1+(i/100));
-
-let output=`
-Online: <span class="highlight">${format(onlineBoosted)}</span><br>
-Offline (max 7h): <span class="highlight">${format(offlineBoosted)}</span>
-`;
-
-if(showPercent){
-let percent=((offlineBoosted-onlineBoosted)/onlineBoosted)*100;
-let abs=Math.abs(percent).toFixed(1);
-
-let label="";
-if(percent>0){
-label=`Win +${abs}%`;
-}else if(percent<0){
-label=`Lost -${abs}%`;
-}else{
-label="Equal 0%";
-}
-
-output+=`<br><span class="highlight">${label}</span>`;
-}
-
-resultBlock.innerHTML=output;
-}
-
-function switchTab(tab){
-document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
-document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-if(tab==="calculator"){
-calculatorView.classList.add("active");
-document.querySelectorAll(".tab")[0].classList.add("active");
-}
-if(tab==="settings"){
-settingsView.classList.add("active");
-document.querySelectorAll(".tab")[1].classList.add("active");
+if(boostComparison.checked){
+let totalHours=Math.min(sec/3600,7);
+if(totalHours>2){
+let rest=Math.max(totalHours-2,0);
+offlineVal+= (rest*3600/9)*u*0.5;
 }
 }
 
+let compareTo=mode==="online"?offlineVal:onlineVal;
+if(compareTo>0){
+let diff=((base-compareTo)/compareTo)*100;
+comparison.innerText=
+(diff>=0?"+":"")+Math.round(diff)+"% "+
+(diff>=0?"Win":"Lost")+
+" in comparison to "+(mode==="online"?"Offline":"Online");
+}else comparison.innerText="";
+}else comparison.innerText="";
+
+historyData.push(base);
+localStorage.setItem("history",JSON.stringify(historyData));
+updateAnalytics();
+};
+
+let chart=new Chart(document.getElementById("chart"),{
+type:'line',
+data:{labels:[],datasets:[{data:[],borderColor:getComputedStyle(document.documentElement).getPropertyValue('--accent-dark'),fill:false,tension:.3}]},
+options:{plugins:{legend:{display:false}}}
+});
+
+function updateAnalytics(){
+chart.data.labels=historyData.map((_,i)=>i+1);
+chart.data.datasets[0].data=historyData;
+chart.update();
+
+let total=historyData.reduce((a,b)=>a+b,0);
+totalCalc.innerText="Total Calculations: "+historyData.length;
+totalProd.innerText="Total Production: "+format(total);
+avgProd.innerText="Average Production: "+format(total/historyData.length||0);
+}
+
+updateAnalytics();
 </script>
 
 </body>
