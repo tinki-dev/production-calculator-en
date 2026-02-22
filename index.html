@@ -28,7 +28,7 @@ viewport-fit=cover">
 --bg-top:#EEF3FF;
 --bg-bottom:#F6F8FF;
 --glass:rgba(255,255,255,0.65);
---glass-strong:rgba(255,255,255,0.85);
+--glass-strong:rgba(255,255,255,0.9);
 --border:rgba(255,255,255,0.4);
 --text:#2c2c2c;
 --muted:#666;
@@ -36,8 +36,6 @@ viewport-fit=cover">
 
 @media (prefers-color-scheme: dark){
 :root{
---accent:#9FA8FF;
---accent-dark:#B8BFFF;
 --bg-top:#11121A;
 --bg-bottom:#1A1B2A;
 --glass:rgba(28,28,40,0.6);
@@ -56,10 +54,8 @@ margin:0;
 padding:0;
 background:linear-gradient(to bottom,var(--bg-top),var(--bg-bottom)) fixed;
 color:var(--text);
--webkit-user-select:none;
--webkit-touch-callout:none;
-overflow:hidden;
 font-family:'Playfair Display', serif;
+overflow:hidden;
 }
 
 body{
@@ -90,28 +86,28 @@ display:none;
 flex-direction:column;
 align-items:center;
 justify-content:center;
-padding:24px 20px 10px 20px;
-animation:fadeSlide .3s ease;
+padding:20px 18px 0 18px;
+animation:fade .25s ease;
 }
 
 .view.active{display:flex;}
 
-@keyframes fadeSlide{
-from{opacity:0;transform:translateY(10px);}
-to{opacity:1;transform:translateY(0);}
+@keyframes fade{
+from{opacity:0}
+to{opacity:1}
 }
 
 /* ================= TYPO ================= */
 
 h1{
-font-size:24px;
+font-size:22px;
 font-weight:600;
 color:var(--accent-dark);
 }
 
 .subtitle{
-font-size:13px;
-margin-top:6px;
+font-size:12px;
+margin-top:4px;
 opacity:.75;
 color:var(--muted);
 }
@@ -119,23 +115,23 @@ color:var(--muted);
 /* ================= SEGMENT ================= */
 
 .segment{
-margin-top:20px;
+margin-top:16px;
 display:flex;
 background:var(--glass);
-border-radius:40px;
-backdrop-filter:blur(25px);
+border-radius:30px;
+backdrop-filter:blur(20px);
 border:1px solid var(--border);
 overflow:hidden;
 }
 
 .segment button{
 flex:1;
-padding:8px;
+padding:6px;
 border:none;
 background:none;
-color:var(--text);
 cursor:pointer;
-transition:.2s;
+color:var(--text);
+font-size:14px;
 }
 
 .segment button.active{
@@ -143,10 +139,8 @@ background:var(--glass-strong);
 color:var(--accent-dark);
 }
 
-.segment button:active{transform:scale(.95);}
-
 .mode{
-margin-top:6px;
+margin-top:4px;
 font-size:11px;
 font-style:italic;
 color:var(--muted);
@@ -155,65 +149,72 @@ color:var(--muted);
 /* ================= CARD ================= */
 
 .card{
-margin-top:20px;
+margin-top:16px;
 width:100%;
 background:var(--glass);
-border-radius:25px;
-backdrop-filter:blur(25px);
+border-radius:22px;
+backdrop-filter:blur(20px);
 border:1px solid var(--border);
-padding:18px;
+padding:14px;
 display:flex;
 flex-direction:column;
-gap:10px;
+gap:8px;
 }
 
 input{
-padding:8px;
-border-radius:12px;
+padding:6px;
+border-radius:10px;
 border:none;
 background:var(--glass-strong);
 text-align:center;
 color:var(--text);
+font-size:14px;
 }
 
 input:disabled{opacity:.4;}
 
 button.calc{
-padding:8px;
+padding:6px;
 border:none;
-border-radius:20px;
+border-radius:16px;
 background:var(--accent);
 color:white;
 cursor:pointer;
-transition:.2s;
 }
 
-button.calc:active{transform:scale(.95);}
-
 .result{
-margin-top:10px;
-font-size:26px;
+margin-top:6px;
+font-size:22px;
 font-weight:700;
 color:var(--accent-dark);
 text-align:center;
-transition:.2s;
 }
 
 .comparison{
-margin-top:4px;
-font-size:13px;
+font-size:12px;
 text-align:center;
 color:var(--muted);
 }
 
-/* ================= TABS ================= */
+/* ================= FLOATING TABBAR ================= */
+
+.tabbar-wrapper{
+padding-bottom:20px;
+padding-top:10px;
+}
 
 .tabbar{
-height:60px;
+width:90%;
+margin:0 auto;
+height:55px;
 display:flex;
+justify-content:space-around;
+align-items:center;
 background:var(--glass);
-border-top:1px solid var(--border);
-backdrop-filter:blur(25px);
+border-radius:25px;
+backdrop-filter:blur(20px);
+border:1px solid var(--border);
+box-shadow:0 8px 20px rgba(0,0,0,0.1);
 }
 
 .tabbar button{
@@ -222,23 +223,48 @@ border:none;
 background:none;
 cursor:pointer;
 color:var(--muted);
-transition:.2s;
+font-size:14px;
 }
 
-.tabbar button.active{color:var(--accent-dark);}
+.tabbar button.active{
+color:var(--accent-dark);
+}
 
-/* ================= ANALYTICS ================= */
+/* ================= SETTINGS ================= */
+
+.section-title{
+margin-top:20px;
+font-size:14px;
+opacity:.6;
+}
+
+.setting-row{
+width:100%;
+padding:10px 0;
+display:flex;
+justify-content:space-between;
+align-items:center;
+border-bottom:1px solid var(--border);
+font-size:14px;
+}
+
+.setting-row:last-child{border:none;}
+
+.radio{
+accent-color:var(--accent-dark);
+}
+
+canvas{margin-top:15px;}
 
 .stat{
 margin-top:10px;
 background:var(--glass);
-border-radius:18px;
-padding:12px;
+border-radius:16px;
+padding:10px;
 text-align:center;
 border:1px solid var(--border);
+font-size:13px;
 }
-
-canvas{margin-top:15px;}
 
 </style>
 </head>
@@ -274,7 +300,7 @@ canvas{margin-top:15px;}
 <!-- ANALYTICS -->
 <div id="analyticsView" class="view">
 <h1>Analytics</h1>
-<canvas id="chart" height="200"></canvas>
+<canvas id="chart" height="180"></canvas>
 <div class="stat" id="totalCalc"></div>
 <div class="stat" id="totalProd"></div>
 <div class="stat" id="avgProd"></div>
@@ -283,26 +309,39 @@ canvas{margin-top:15px;}
 <!-- SETTINGS -->
 <div id="settingsView" class="view">
 <h1>Settings</h1>
-<div class="stat">
-<label><input type="checkbox" id="showComparison" checked> Show comparison</label>
+
+<div class="section-title">Display</div>
+<div class="setting-row">
+<span>Show comparison</span>
+<input type="checkbox" id="showComparison">
 </div>
-<div class="stat">
-<label><input type="checkbox" id="boostComparison"> Apply 50% comparison boost after hour 3</label>
-</div>
+<div class="setting-row">
+<span>Apply 50% boost after hour 3</span>
+<input type="checkbox" id="boostComparison">
 </div>
 
+<div class="section-title">Appearance</div>
+<div class="setting-row"><span>Pastel Blue</span><input type="radio" name="theme" class="radio" value="#7FB9FF" checked></div>
+<div class="setting-row"><span>Pastel Pink</span><input type="radio" name="theme" class="radio" value="#FF9FB9"></div>
+<div class="setting-row"><span>Pastel Purple</span><input type="radio" name="theme" class="radio" value="#C3A6FF"></div>
+<div class="setting-row"><span>Pastel Orange</span><input type="radio" name="theme" class="radio" value="#FFB37F"></div>
+<div class="setting-row"><span>Pastel Yellow</span><input type="radio" name="theme" class="radio" value="#FFD97F"></div>
+
+</div>
+
+<div class="tabbar-wrapper">
 <div class="tabbar">
 <button class="active" data-tab="calcView">Calculator</button>
 <button data-tab="analyticsView">Analytics</button>
 <button data-tab="settingsView">Settings</button>
+</div>
 </div>
 
 </div>
 
 <script>
 
-let mode="online";
-let historyData=JSON.parse(localStorage.getItem("history")||"[]");
+/* ================= TABS ================= */
 
 document.querySelectorAll(".tabbar button").forEach(btn=>{
 btn.onclick=()=>{
@@ -312,6 +351,26 @@ document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
 document.getElementById(btn.dataset.tab).classList.add("active");
 };
 });
+
+/* ================= THEME ================= */
+
+document.querySelectorAll("input[name='theme']").forEach(r=>{
+r.onchange=()=>{
+document.documentElement.style.setProperty("--accent",r.value);
+document.documentElement.style.setProperty("--accent-dark",r.value);
+localStorage.setItem("theme",r.value);
+};
+});
+
+let savedTheme=localStorage.getItem("theme");
+if(savedTheme){
+document.documentElement.style.setProperty("--accent",savedTheme);
+document.documentElement.style.setProperty("--accent-dark",savedTheme);
+}
+
+/* ================= CALC LOGIC ================= */
+
+let mode="online";
 
 onlineBtn.onclick=()=>setMode("online");
 offlineBtn.onclick=()=>setMode("offline");
@@ -326,8 +385,8 @@ days.disabled=(m==="offline");
 
 function format(n){return Math.round(n).toLocaleString("de-DE");}
 
-function calculateOnline(sec,u,man){return (sec/9)*u+man;}
-function calculateOffline(sec,u,man){
+function calcOnline(sec,u,man){return (sec/9)*u+man;}
+function calcOffline(sec,u,man){
 let totalHours=Math.min(sec/3600,7);
 let firstTwo=Math.min(totalHours,2);
 let rest=Math.max(totalHours-2,0);
@@ -344,14 +403,13 @@ let inc=+increase.value||0;
 if(inc>50)inc=50;
 
 let sec=d*86400+h*3600+m*60;
-let base=mode==="online"?calculateOnline(sec,u,man):calculateOffline(sec,u,man);
-base*=1+inc/100;
+let base=(mode==="online"?calcOnline(sec,u,man):calcOffline(sec,u,man))*(1+inc/100);
 
 result.innerText=format(base);
 
 if(showComparison.checked){
-let onlineVal=calculateOnline(sec,u,man);
-let offlineVal=calculateOffline(sec,u,man);
+let onlineVal=calcOnline(sec,u,man);
+let offlineVal=calcOffline(sec,u,man);
 
 if(boostComparison.checked){
 let totalHours=Math.min(sec/3600,7);
@@ -366,33 +424,11 @@ if(compareTo>0){
 let diff=((base-compareTo)/compareTo)*100;
 comparison.innerText=(diff>=0?"+":"")+Math.round(diff)+"% "+
 (diff>=0?"Win":"Lost")+" in comparison to "+(mode==="online"?"Offline":"Online");
+}
 }else comparison.innerText="";
-}else comparison.innerText="";
-
-historyData.push(base);
-localStorage.setItem("history",JSON.stringify(historyData));
-updateAnalytics();
 };
 
-let chart=new Chart(document.getElementById("chart"),{
-type:'line',
-data:{labels:[],datasets:[{data:[],borderColor:getComputedStyle(document.documentElement).getPropertyValue('--accent-dark'),fill:false,tension:.3}]},
-options:{plugins:{legend:{display:false}}}
-});
-
-function updateAnalytics(){
-chart.data.labels=historyData.map((_,i)=>i+1);
-chart.data.datasets[0].data=historyData;
-chart.update();
-
-let total=historyData.reduce((a,b)=>a+b,0);
-totalCalc.innerText="Total Calculations: "+historyData.length;
-totalProd.innerText="Total Production: "+format(total);
-avgProd.innerText="Average Production: "+format(total/historyData.length||0);
-}
-
-updateAnalytics();
-
 </script>
+
 </body>
 </html>
