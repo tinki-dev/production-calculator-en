@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Production Planner</title>
+
+<style>
+:root{
+--accent:#AEB4C2;
+--bg:#EEF1F5;
+--card:#FFFFFF;
+--border:#E5E5EA;
+--text:#1C1C1E;
+--muted:#8E8E93;
+}
+
+body{
+margin:0;
+font-family:-apple-system, BlinkMacSystemFont, sans-serif;
+background:var(--bg);
+color:var(--text);
+}
+
+.app{
+max-width:520px;
+margin:auto;
+padding:20px;
+}
+
+.view{display:none;}
+.view.active{display:block;}
+
+h1{margin:0 0 4px 0; font-size:20px;}
+.mode-indicator{font-size:12px; color:var(--muted);}
+
+.segment{
+display:flex;
+margin-top:12px;
+border:1px solid var(--border);
+border-radius:16px;
+overflow:hidden;
+}
+
+.segment button{
+flex:1;
+padding:8px;
+border:none;
+background:none;
+cursor:pointer;
+}
+
+.segment button.active{
+background:var(--accent);
+color:white;
+}
+
+.card{
+margin-top:16px;
+padding:14px;
+border:1px solid var(--border);
+border-radius:16px;
+background:var(--card);
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+input{
+padding:8px;
+border-radius:8px;
+border:1px solid var(--border);
+}
+
+button.calc{
+background:var(--accent);
+color:white;
+border:none;
+border-radius:10px;
+padding:8px;
+cursor:pointer;
+}
+
+.result{font-weight:600; font-size:18px; text-align:center;}
+.comparison{font-size:13px; text-align:center; color:var(--muted);}
+
+.tabbar{
+display:flex;
+justify-content:space-around;
+margin-top:20px;
+border-top:1px solid var(--border);
+padding-top:10px;
+}
+
+.tabbar button{
+border:none;
+background:none;
+cursor:pointer;
+}
+
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<div id="calcView" class="view active">
+<h1>Production Planner</h1>
+<div class="mode-indicator" id="modeText">Online mode active</div>
+
+<div class="segment">
+<button id="onlineBtn" class="active">Online</button>
+<button id="offlineBtn">Offline</button>
+</div>
+
+<div class="card">
+<input type="number" id="days" placeholder="Days">
+<input type="number" id="hours" placeholder="Hours">
+<input type="number" id="minutes" placeholder="Minutes">
+<input type="number" id="units" placeholder="Units every 9 seconds">
+<input type="number" id="manual" placeholder="Manual units">
+<input type="number" id="increase" placeholder="Increase % (max 50)">
+<button class="calc" id="calcBtn">Calculate</button>
+<div class="result" id="result">0</div>
+<div class="comparison" id="comparison"></div>
+</div>
+</div>
+
+<div id="analyticsView" class="view">
+<h1>Analytics</h1>
+<div id="totalCalc"></div>
+<div id="totalProd"></div>
+<div id="avgProd"></div>
+</div>
+
+<div id="settingsView" class="view">
+<h1>Settings</h1>
+<p><strong>Guide</strong></p>
+<p>
+Offline mode assumes all upgrades are active.<br>
+Max 7 hours.<br>
+1–2h = 100%<br>
+3–7h = 20%
+</p>
+</div>
+
+<div class="tabbar">
+<button data-tab="calcView">Calculator</button>
+<button data-tab="analyticsView">Analytics</button>
+<button data-tab="settingsView">Settings</button>
+</div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+let mode = "online";
+let historyData = [];
+
+const onlineBtn = document.getElementById("onlineBtn");
+const offlineBtn = document.getElementById("offlineBtn");
+const modeText = document.getElementById("modeText");
+const result = document.getElementById("result");
+const comparison = document.getElementById("comparison");
+
+function setMode(m){
+mode = m;
+onlineBtn.classList.toggle("active", m==="online");
+offlineBtn.classList.toggle("active", m==="offline");
+modeText.textContent = m==="online" ? "Online mode active" : "Offline mode active";
+document.getElementById("days").disabled = (m==="offline");
+}
+
+onlineBtn.onclick = ()=>setMode("online");
+offlineBtn.onclick = ()=>setMode("offline");
+
+function calcOnline(sec,u,man){ return (sec/9)*u + man; }
+function calcOffline(sec,u,man){
+let hours = Math.min(sec/3600,7);
+let firstTwo = Math.min(hours,2);
+let rest = Math.max(hours-2,0);
+return (firstTwo*3600/9)*u + (rest*3600/9)*u*0.2 + man;
+}
+
+function format(n){ return Math.round(n).toLocaleString("de-DE"); }
+
+document.getElementById("calcBtn").onclick = function(){
+
+let d = +document.getElementById("days").value || 0;
+let h = +document.getElementById("hours").value || 0;
+let m = +document.getElementById("minutes").value || 0;
+let u = +document.getElementById("units").value || 0;
+let man = +document.getElementById("manual").value || 0;
+let inc = +document.getElementById("increase").value || 0;
+if(inc>50) inc=50;
+
+let sec = d*86400 + h*3600 + m*60;
+let base = (mode==="online" ? calcOnline(sec,u,man) : calcOffline(sec,u,man));
+base *= 1 + inc/100;
+
+result.textContent = format(base);
+
+historyData.push(base);
+updateAnalytics();
+
+};
+
+function updateAnalytics(){
+let total = historyData.reduce((a,b)=>a+b,0);
+document.getElementById("totalCalc").textContent = "Total calculations: " + historyData.length;
+document.getElementById("totalProd").textContent = "Total production: " + format(total);
+document.getElementById("avgProd").textContent = "Average production: " + format(total/historyData.length || 0);
+}
+
+document.querySelectorAll(".tabbar button").forEach(btn=>{
+btn.onclick = function(){
+document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+document.getElementById(btn.dataset.tab).classList.add("active");
+};
+});
+
+});
+</script>
+
+</body>
+</html>
