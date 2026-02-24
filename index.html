@@ -3,11 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport"
-content="width=device-width,
-initial-scale=1,
-maximum-scale=1,
-user-scalable=no,
-viewport-fit=cover">
+content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -19,9 +15,7 @@ viewport-fit=cover">
 
 <style>
 
-/* =========================
-   ROOT / THEME VARIABLES
-========================= */
+/* ================= ROOT ================= */
 
 :root{
 --accent:#AEB4C2;
@@ -36,8 +30,8 @@ viewport-fit=cover">
 
 @media (prefers-color-scheme: dark){
 :root{
---bg-top:#000000;
---bg-bottom:#111111;
+--bg-top:#000;
+--bg-bottom:#111;
 --card:#1C1C1E;
 --border:#2C2C2E;
 --text:#FFFFFF;
@@ -46,8 +40,8 @@ viewport-fit=cover">
 }
 
 html,body{
-height:100%;
 margin:0;
+height:100%;
 background:linear-gradient(to bottom,var(--bg-top),var(--bg-bottom));
 font-family:'Inter',sans-serif;
 color:var(--text);
@@ -63,10 +57,6 @@ margin:auto;
 padding-top:env(safe-area-inset-top);
 padding-bottom:env(safe-area-inset-bottom);
 }
-
-/* =========================
-   VIEW SYSTEM
-========================= */
 
 .view{
 flex:1;
@@ -86,23 +76,21 @@ align-items:stretch;
 justify-content:flex-start;
 }
 
-/* =========================
-   TYPO
-========================= */
+/* ================= HEADER ================= */
 
 h1{
+margin:0;
 font-size:20px;
 font-weight:600;
 color:var(--accent-dark);
-margin:0;
 }
 
 .mode-indicator{
 display:flex;
 align-items:center;
 gap:6px;
-font-size:12px;
 margin-top:4px;
+font-size:12px;
 color:var(--muted);
 }
 
@@ -113,18 +101,16 @@ border-radius:50%;
 background:var(--accent);
 }
 
-/* =========================
-   SEGMENT CONTROL
-========================= */
+/* ================= SEGMENT ================= */
 
 .segment{
 margin-top:14px;
 display:flex;
-background:var(--card);
-border-radius:20px;
-border:1px solid var(--border);
-overflow:hidden;
 width:100%;
+background:var(--card);
+border:1px solid var(--border);
+border-radius:20px;
+overflow:hidden;
 }
 
 .segment button{
@@ -132,29 +118,27 @@ flex:1;
 padding:8px;
 border:none;
 background:none;
-font-size:13px;
+font-size:14px;
 cursor:pointer;
 }
 
 .segment button.active{
 background:var(--accent);
-color:white;
+color:#fff;
 }
 
-/* =========================
-   CARD
-========================= */
+/* ================= CARD ================= */
 
 .card{
 margin-top:16px;
 width:100%;
 background:var(--card);
-border-radius:16px;
 border:1px solid var(--border);
+border-radius:16px;
 padding:14px;
 display:flex;
 flex-direction:column;
-gap:8px;
+gap:10px;
 }
 
 input{
@@ -176,7 +160,6 @@ cursor:pointer;
 }
 
 .result{
-margin-top:6px;
 font-size:20px;
 font-weight:600;
 text-align:center;
@@ -189,9 +172,7 @@ text-align:center;
 color:var(--muted);
 }
 
-/* =========================
-   TABBAR
-========================= */
+/* ================= TABBAR ================= */
 
 .tabbar-wrapper{
 padding-bottom:20px;
@@ -222,9 +203,7 @@ color:var(--muted);
 color:var(--accent-dark);
 }
 
-/* =========================
-   SETTINGS GROUPED
-========================= */
+/* ================= SETTINGS ================= */
 
 .section-label{
 margin-top:20px;
@@ -254,24 +233,16 @@ font-size:14px;
 
 .group-row:last-child{border-bottom:none;}
 
-.color-preview{
-width:14px;
-height:14px;
-border-radius:50%;
-margin-right:10px;
-}
-
 .theme-row{
 display:flex;
 align-items:center;
 gap:10px;
 }
 
-.accordion-header{
-cursor:pointer;
-display:flex;
-justify-content:space-between;
-align-items:center;
+.color-preview{
+width:14px;
+height:14px;
+border-radius:50%;
 }
 
 .accordion-content{
@@ -292,10 +263,10 @@ padding-bottom:12px;
 .stat{
 margin-top:10px;
 background:var(--card);
+border:1px solid var(--border);
 border-radius:14px;
 padding:10px;
 text-align:center;
-border:1px solid var(--border);
 font-size:14px;
 }
 
@@ -307,13 +278,11 @@ canvas{margin-top:10px;}
 
 <div class="app">
 
-<!-- ================= CALCULATOR ================= -->
-
+<!-- CALCULATOR -->
 <div id="calcView" class="view active">
 <h1>Production Planner</h1>
-
 <div class="mode-indicator">
-<div class="mode-dot"></div>
+<div class="mode-dot" id="modeDot"></div>
 <span id="modeText">Online mode active</span>
 </div>
 
@@ -335,8 +304,7 @@ canvas{margin-top:10px;}
 </div>
 </div>
 
-<!-- ================= ANALYTICS ================= -->
-
+<!-- ANALYTICS -->
 <div id="analyticsView" class="view">
 <h1>Analytics</h1>
 <canvas id="chart" height="160"></canvas>
@@ -345,8 +313,7 @@ canvas{margin-top:10px;}
 <div class="stat" id="avgProd"></div>
 </div>
 
-<!-- ================= SETTINGS ================= -->
-
+<!-- SETTINGS -->
 <div id="settingsView" class="view">
 <h1>Settings</h1>
 
@@ -367,38 +334,27 @@ canvas{margin-top:10px;}
 
 <div class="section-label">How To Use</div>
 <div class="group-card">
-<div class="group-row accordion-header" id="guideToggle">
+<div class="group-row" id="guideToggle" style="cursor:pointer;">
 <span>Tap to expand guide</span>
 <span>▼</span>
 </div>
 <div class="accordion-content" id="guideContent">
 <br>
 <strong>Online Mode</strong><br>
-Counts the full duration you enter.<br><br>
-
+Counts full entered duration.<br><br>
 <strong>Offline Mode</strong><br>
-Maximum 7 hours are calculated.<br>
-Hours 1–2 = 100% production.<br>
-Hours 3–7 = 20% production.<br>
-This calculator assumes all relevant in-game upgrades are active.<br><br>
-
-<strong>Inputs</strong><br>
-Units every 9 seconds is required.<br>
-All other inputs are optional.<br><br>
-
+Max 7 hours. 1–2h = 100%. 3–7h = 20%.<br>
+Assumes all in-game upgrades are active.<br><br>
 <strong>Comparison</strong><br>
-Shows percentage difference as Win or Lost.<br>
-Optional 50% boost affects comparison only.<br><br>
-
+Shows Win/Lost %. Boost affects comparison only.<br><br>
 <strong>Analytics</strong><br>
-Stores unique calculations and shows totals and averages.
+Stores unique results and shows totals.
 </div>
 </div>
 
 </div>
 
-<!-- ================= TABBAR ================= -->
-
+<!-- TABBAR -->
 <div class="tabbar-wrapper">
 <div class="tabbar">
 <button class="active" data-tab="calcView">Calculator</button>
@@ -411,14 +367,45 @@ Stores unique calculations and shows totals and averages.
 
 <script>
 
-/* ================= STATE ================= */
+document.addEventListener("DOMContentLoaded",function(){
 
 let mode="online";
 let historyData=JSON.parse(localStorage.getItem("history")||"[]");
 let currentTheme=localStorage.getItem("theme")||"#AEB4C2";
 
-/* ================= THEME SYSTEM ================= */
+const onlineBtn=document.getElementById("onlineBtn");
+const offlineBtn=document.getElementById("offlineBtn");
+const modeText=document.getElementById("modeText");
+const modeDot=document.getElementById("modeDot");
+const days=document.getElementById("days");
+const result=document.getElementById("result");
+const comparison=document.getElementById("comparison");
+const showComparison=document.getElementById("showComparison");
+const boostComparison=document.getElementById("boostComparison");
 
+/* Tabs */
+document.querySelectorAll(".tabbar button").forEach(btn=>{
+btn.addEventListener("click",function(){
+document.querySelectorAll(".tabbar button").forEach(b=>b.classList.remove("active"));
+btn.classList.add("active");
+document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+document.getElementById(btn.dataset.tab).classList.add("active");
+});
+});
+
+/* Mode */
+function setMode(m){
+mode=m;
+onlineBtn.classList.toggle("active",m==="online");
+offlineBtn.classList.toggle("active",m==="offline");
+modeText.textContent=m==="online"?"Online mode active":"Offline mode active";
+modeDot.style.background=currentTheme;
+days.disabled=(m==="offline");
+}
+onlineBtn.onclick=()=>setMode("online");
+offlineBtn.onclick=()=>setMode("offline");
+
+/* Theme */
 const themes=[
 {name:"Pastel Grey",value:"#AEB4C2"},
 {name:"Pastel Blue",value:"#7FB9FF"},
@@ -433,7 +420,6 @@ const themeContainer=document.getElementById("themeContainer");
 themes.forEach(t=>{
 const row=document.createElement("div");
 row.className="group-row";
-
 row.innerHTML=`
 <div class="theme-row">
 <div class="color-preview" style="background:${t.value}"></div>
@@ -441,7 +427,6 @@ row.innerHTML=`
 </div>
 <input type="radio" name="theme" value="${t.value}">
 `;
-
 themeContainer.appendChild(row);
 });
 
@@ -450,53 +435,35 @@ document.documentElement.style.setProperty("--accent",color);
 document.documentElement.style.setProperty("--accent-dark",color);
 currentTheme=color;
 localStorage.setItem("theme",color);
-updateChartColor();
+modeDot.style.background=color;
+chart.data.datasets[0].borderColor=color;
+chart.update();
 }
 
 document.querySelectorAll("input[name='theme']").forEach(r=>{
-r.onchange=()=>applyTheme(r.value);
+r.addEventListener("change",function(){ applyTheme(r.value); });
 if(r.value===currentTheme) r.checked=true;
 });
-
 applyTheme(currentTheme);
 
-/* ================= MODE ================= */
-
-function setMode(m){
-mode=m;
-onlineBtn.classList.toggle("active",m==="online");
-offlineBtn.classList.toggle("active",m==="offline");
-modeText.textContent=m==="online"?"Online mode active":"Offline mode active";
-days.disabled=(m==="offline");
-}
-
-onlineBtn.onclick=()=>setMode("online");
-offlineBtn.onclick=()=>setMode("offline");
-
-/* ================= CALCULATION ================= */
-
-function calculateOnline(sec,u,man){
-return (sec/9)*u+man;
-}
-
+/* Calculation */
+function calculateOnline(sec,u,man){ return (sec/9)*u+man; }
 function calculateOffline(sec,u,man){
 let hours=Math.min(sec/3600,7);
 let firstTwo=Math.min(hours,2);
 let rest=Math.max(hours-2,0);
 return (firstTwo*3600/9)*u+(rest*3600/9)*u*0.2+man;
 }
+function format(n){ return Math.round(n).toLocaleString("de-DE"); }
 
-function format(n){
-return Math.round(n).toLocaleString("de-DE");
-}
+document.getElementById("calcBtn").onclick=function(){
 
-calcBtn.onclick=()=>{
 let d=+days.value||0;
-let h=+hours.value||0;
-let m=+minutes.value||0;
-let u=+units.value||0;
-let man=+manual.value||0;
-let inc=+increase.value||0;
+let h=+document.getElementById("hours").value||0;
+let m=+document.getElementById("minutes").value||0;
+let u=+document.getElementById("units").value||0;
+let man=+document.getElementById("manual").value||0;
+let inc=+document.getElementById("increase").value||0;
 if(inc>50)inc=50;
 
 let sec=d*86400+h*3600+m*60;
@@ -505,14 +472,12 @@ base*=1+inc/100;
 
 result.textContent=format(base);
 
-/* Save unique */
 if(historyData[historyData.length-1]!==base){
 historyData.push(base);
 localStorage.setItem("history",JSON.stringify(historyData));
 updateAnalytics();
 }
 
-/* Comparison */
 if(showComparison.checked){
 let onlineVal=calculateOnline(sec,u,man);
 let offlineVal=calculateOffline(sec,u,man);
@@ -538,18 +503,12 @@ comparison.textContent="";
 }
 };
 
-/* ================= ANALYTICS ================= */
-
-let chart=new Chart(document.getElementById("chart"),{
+/* Analytics */
+const chart=new Chart(document.getElementById("chart"),{
 type:"line",
 data:{labels:[],datasets:[{data:[],borderColor:currentTheme,fill:false,tension:.3}]},
 options:{plugins:{legend:{display:false}}}
 });
-
-function updateChartColor(){
-chart.data.datasets[0].borderColor=currentTheme;
-chart.update();
-}
 
 function updateAnalytics(){
 chart.data.labels=historyData.map((_,i)=>i+1);
@@ -557,28 +516,17 @@ chart.data.datasets[0].data=historyData;
 chart.update();
 
 let total=historyData.reduce((a,b)=>a+b,0);
-totalCalc.textContent="Total calculations: "+historyData.length;
-totalProd.textContent="Total production: "+format(total);
-avgProd.textContent="Average production: "+format(total/historyData.length||0);
+document.getElementById("totalCalc").textContent="Total calculations: "+historyData.length;
+document.getElementById("totalProd").textContent="Total production: "+format(total);
+document.getElementById("avgProd").textContent="Average production: "+format(total/historyData.length||0);
 }
-
 updateAnalytics();
 
-/* ================= GUIDE ================= */
-
-guideToggle.onclick=()=>{
-guideContent.classList.toggle("open");
+/* Guide */
+document.getElementById("guideToggle").onclick=function(){
+document.getElementById("guideContent").classList.toggle("open");
 };
 
-/* ================= TAB SWITCH ================= */
-
-document.querySelectorAll(".tabbar button").forEach(btn=>{
-btn.onclick=()=>{
-document.querySelectorAll(".tabbar button").forEach(b=>b.classList.remove("active"));
-btn.classList.add("active");
-document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
-document.getElementById(btn.dataset.tab).classList.add("active");
-};
 });
 
 </script>
