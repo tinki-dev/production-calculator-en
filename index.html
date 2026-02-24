@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-
 <meta name="viewport"
 content="width=device-width,
 initial-scale=1,
@@ -20,7 +19,7 @@ viewport-fit=cover">
 
 <style>
 
-/* ================= ROOT ================= */
+/* ROOT */
 
 :root{
 --accent:#AEB4C2;
@@ -46,32 +45,24 @@ viewport-fit=cover">
 }
 }
 
-/* ================= GLOBAL ================= */
-
-html, body{
+html,body{
 height:100%;
 margin:0;
-padding:0;
-background:linear-gradient(to bottom,var(--bg-top),var(--bg-bottom)) fixed;
+background:linear-gradient(to bottom,var(--bg-top),var(--bg-bottom));
+font-family:'Inter',sans-serif;
 color:var(--text);
-font-family:'Inter', sans-serif;
 }
-
-/* ================= APP ================= */
 
 .app{
 height:100dvh;
 display:flex;
 flex-direction:column;
 justify-content:space-between;
-width:100%;
 max-width:500px;
-margin:0 auto;
+margin:auto;
 padding-top:env(safe-area-inset-top);
 padding-bottom:env(safe-area-inset-bottom);
 }
-
-/* ================= VIEW ================= */
 
 .view{
 flex:1;
@@ -89,27 +80,24 @@ overflow-y:auto;
 -webkit-overflow-scrolling:touch;
 }
 
-/* ================= TYPO ================= */
-
 h1{
 font-size:20px;
 font-weight:600;
 color:var(--accent-dark);
+margin:0;
 }
 
-.subtitle{
+.mode-indicator{
 font-size:12px;
-color:var(--muted);
 margin-top:4px;
+color:var(--muted);
 }
-
-/* ================= SEGMENT ================= */
 
 .segment{
 margin-top:14px;
 display:flex;
 background:var(--glass);
-border-radius:24px;
+border-radius:20px;
 border:1px solid var(--border);
 overflow:hidden;
 }
@@ -120,7 +108,6 @@ padding:6px;
 border:none;
 background:none;
 font-size:13px;
-color:var(--text);
 cursor:pointer;
 }
 
@@ -129,13 +116,11 @@ background:var(--glass-strong);
 color:var(--accent-dark);
 }
 
-/* ================= CARD ================= */
-
 .card{
 margin-top:14px;
 width:100%;
 background:var(--glass);
-border-radius:18px;
+border-radius:16px;
 border:1px solid var(--border);
 padding:12px;
 display:flex;
@@ -145,17 +130,17 @@ gap:6px;
 
 input{
 padding:6px;
-border-radius:8px;
+border-radius:6px;
 border:none;
 background:var(--glass-strong);
-font-size:13px;
 text-align:center;
+font-size:13px;
 }
 
 button.calc{
 padding:6px;
 border:none;
-border-radius:12px;
+border-radius:10px;
 background:var(--accent);
 color:white;
 font-size:13px;
@@ -163,7 +148,7 @@ cursor:pointer;
 }
 
 .result{
-margin-top:4px;
+margin-top:6px;
 font-size:18px;
 font-weight:600;
 text-align:center;
@@ -171,12 +156,12 @@ color:var(--accent-dark);
 }
 
 .comparison{
-font-size:11px;
+font-size:12px;
 text-align:center;
 color:var(--muted);
 }
 
-/* ================= FLOATING TABBAR ================= */
+/* TABBAR */
 
 .tabbar-wrapper{
 padding-bottom:22px;
@@ -184,15 +169,14 @@ padding-bottom:22px;
 
 .tabbar{
 width:88%;
-margin:0 auto;
+margin:auto;
 height:48px;
 display:flex;
-justify-content:space-around;
 align-items:center;
+justify-content:space-around;
 background:var(--glass);
 border-radius:20px;
 border:1px solid var(--border);
-box-shadow:0 4px 14px rgba(0,0,0,0.08);
 }
 
 .tabbar button{
@@ -200,46 +184,37 @@ flex:1;
 border:none;
 background:none;
 font-size:13px;
-color:var(--muted);
 cursor:pointer;
+color:var(--muted);
 }
 
 .tabbar button.active{
 color:var(--accent-dark);
 }
 
-/* ================= SETTINGS ================= */
+/* SETTINGS */
 
 .section-title{
-margin-top:18px;
+margin-top:16px;
 font-size:12px;
 font-weight:600;
 color:var(--muted);
 }
 
 .setting-row{
-width:100%;
-padding:8px 0;
 display:flex;
 justify-content:space-between;
-align-items:center;
+padding:8px 0;
 border-bottom:1px solid var(--border);
 font-size:13px;
 }
 
 .setting-row:last-child{border:none;}
 
-.radio{
-accent-color:var(--accent-dark);
-}
-
-/* Accordion */
-
 .accordion-header{
-margin-top:18px;
+margin-top:16px;
 display:flex;
 justify-content:space-between;
-align-items:center;
 cursor:pointer;
 font-weight:600;
 font-size:13px;
@@ -255,47 +230,41 @@ max-height:0;
 overflow:hidden;
 transition:max-height .3s ease;
 font-size:12px;
+margin-top:6px;
 color:var(--muted);
-margin-top:8px;
-line-height:1.5;
 }
 
 .accordion-content.open{
 max-height:1000px;
 }
 
-.chevron{
-transition:transform .3s ease;
-}
-
 .chevron.rotate{
 transform:rotate(180deg);
+transition:.3s;
 }
 
 .stat{
 margin-top:8px;
 background:var(--glass);
-border-radius:12px;
+border-radius:10px;
 padding:6px;
+font-size:12px;
 text-align:center;
 border:1px solid var(--border);
-font-size:12px;
 }
 
-canvas{
-margin-top:10px;
-}
+canvas{margin-top:8px;}
 
 </style>
 </head>
-
 <body>
+
 <div class="app">
 
 <!-- CALCULATOR -->
 <div id="calcView" class="view active">
 <h1>Production Planner</h1>
-<div class="subtitle">Optimize your production flow</div>
+<div class="mode-indicator" id="modeText">Online mode active</div>
 
 <div class="segment">
 <button id="onlineBtn" class="active">Online</button>
@@ -338,34 +307,21 @@ margin-top:10px;
 <input type="checkbox" id="boostComparison">
 </div>
 
-<div class="section-title">Appearance</div>
-<div class="setting-row"><span>Pastel Grey (Default)</span><input type="radio" name="theme" class="radio" value="#AEB4C2" checked></div>
-<div class="setting-row"><span>Pastel Blue</span><input type="radio" name="theme" class="radio" value="#7FB9FF"></div>
-<div class="setting-row"><span>Pastel Pink</span><input type="radio" name="theme" class="radio" value="#FF9FB9"></div>
-<div class="setting-row"><span>Pastel Purple</span><input type="radio" name="theme" class="radio" value="#C3A6FF"></div>
-<div class="setting-row"><span>Pastel Orange</span><input type="radio" name="theme" class="radio" value="#FFB37F"></div>
-<div class="setting-row"><span>Pastel Yellow</span><input type="radio" name="theme" class="radio" value="#FFD97F"></div>
-
 <div class="accordion-header" onclick="toggleGuide()">
 <div>
 How to Use
 <div class="accordion-sub">Tap to expand</div>
 </div>
-<div class="chevron" id="chevron">▼</div>
+<div id="chevron">▼</div>
 </div>
 
 <div class="accordion-content" id="guideContent">
 <br>
-<strong>Online Mode</strong><br>
-Calculates full duration entered.<br><br>
-<strong>Offline Mode</strong><br>
-Max 7h. 1–2h = 100%. 3–7h = 20%.<br><br>
-<strong>Input Fields</strong><br>
+Online: counts full time.<br><br>
+Offline: max 7h. 1–2h 100%. 3–7h 20%.<br><br>
 Units every 9s required. Others optional.<br><br>
-<strong>Comparison</strong><br>
-Shows Win/Lost %. Boost affects comparison only.<br><br>
-<strong>Statistics</strong><br>
-Shows total runs, total production, average and chart.
+Comparison shows Win/Lost %.<br><br>
+Analytics shows totals and history chart.
 </div>
 
 </div>
@@ -382,6 +338,7 @@ Shows total runs, total production, average and chart.
 
 <script>
 
+/* TAB SWITCH */
 document.querySelectorAll(".tabbar button").forEach(btn=>{
 btn.onclick=()=>{
 document.querySelectorAll(".tabbar button").forEach(b=>b.classList.remove("active"));
@@ -391,12 +348,105 @@ document.getElementById(btn.dataset.tab).classList.add("active");
 };
 });
 
+/* GUIDE */
 function toggleGuide(){
 guideContent.classList.toggle("open");
 chevron.classList.toggle("rotate");
 }
 
-</script>
+/* MODE */
+let mode="online";
+onlineBtn.onclick=()=>setMode("online");
+offlineBtn.onclick=()=>setMode("offline");
 
+function setMode(m){
+mode=m;
+onlineBtn.classList.toggle("active",m==="online");
+offlineBtn.classList.toggle("active",m==="offline");
+modeText.innerText=m==="online"?"Online mode active":"Offline mode active";
+days.disabled=(m==="offline");
+}
+
+/* CALCULATION */
+let historyData=JSON.parse(localStorage.getItem("history")||"[]");
+
+function format(n){return Math.round(n).toLocaleString("de-DE");}
+
+function calcOnline(sec,u,man){return (sec/9)*u+man;}
+
+function calcOffline(sec,u,man){
+let hours=Math.min(sec/3600,7);
+let firstTwo=Math.min(hours,2);
+let rest=Math.max(hours-2,0);
+return (firstTwo*3600/9)*u+(rest*3600/9)*u*0.2+man;
+}
+
+calcBtn.onclick=()=>{
+let d=+days.value||0;
+let h=+hours.value||0;
+let m=+minutes.value||0;
+let u=+units.value||0;
+let man=+manual.value||0;
+let inc=+increase.value||0;
+if(inc>50)inc=50;
+
+let sec=d*86400+h*3600+m*60;
+
+let base=(mode==="online"?calcOnline(sec,u,man):calcOffline(sec,u,man));
+base*=1+inc/100;
+
+result.innerText=format(base);
+
+/* SAVE ONLY IF DIFFERENT */
+if(historyData[historyData.length-1]!==base){
+historyData.push(base);
+localStorage.setItem("history",JSON.stringify(historyData));
+updateAnalytics();
+}
+
+/* COMPARISON */
+if(showComparison.checked){
+let onlineVal=calcOnline(sec,u,man);
+let offlineVal=calcOffline(sec,u,man);
+
+if(boostComparison.checked){
+let hours=Math.min(sec/3600,7);
+if(hours>2){
+let rest=Math.max(hours-2,0);
+offlineVal+=(rest*3600/9)*u*0.5;
+}
+}
+
+let compareTo=mode==="online"?offlineVal:onlineVal;
+let diff=((base-compareTo)/compareTo)*100;
+comparison.innerText=(diff>=0?"+":"")+Math.round(diff)+"% "+
+(diff>=0?"Win":"Lost")+" in comparison to "+(mode==="online"?"Offline":"Online");
+}else{
+comparison.innerText="";
+}
+};
+
+/* ANALYTICS */
+
+let chart=new Chart(document.getElementById("chart"),{
+type:'line',
+data:{labels:[],datasets:[{data:[],borderColor:"#8F96A6",fill:false,tension:.3}]},
+options:{plugins:{legend:{display:false}}}
+});
+
+function updateAnalytics(){
+chart.data.labels=historyData.map((_,i)=>i+1);
+chart.data.datasets[0].data=historyData;
+chart.update();
+
+let total=historyData.reduce((a,b)=>a+b,0);
+totalCalc.innerText="Total Calculations: "+historyData.length;
+totalProd.innerText="Total Production: "+format(total);
+avgProd.innerText="Average Production: "+format(total/historyData.length||0);
+}
+
+updateAnalytics();
+
+</script>
 </body>
 </html>
