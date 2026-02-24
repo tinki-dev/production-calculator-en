@@ -19,29 +19,29 @@ viewport-fit=cover">
 
 <style>
 
-/* ROOT */
+/* =========================
+   ROOT / THEME VARIABLES
+========================= */
 
 :root{
 --accent:#AEB4C2;
 --accent-dark:#8F96A6;
 --bg-top:#EEF1F5;
 --bg-bottom:#F6F8FB;
---glass:rgba(255,255,255,0.75);
---glass-strong:rgba(255,255,255,0.95);
---border:rgba(0,0,0,0.06);
---text:#1E1E1E;
---muted:#777;
+--card:#FFFFFF;
+--border:#E5E5EA;
+--text:#1C1C1E;
+--muted:#8E8E93;
 }
 
 @media (prefers-color-scheme: dark){
 :root{
---bg-top:#111217;
---bg-bottom:#1A1C22;
---glass:rgba(30,32,38,0.65);
---glass-strong:rgba(40,42,50,0.9);
---border:rgba(255,255,255,0.06);
---text:#F1F1F1;
---muted:#9A9A9A;
+--bg-top:#000000;
+--bg-bottom:#111111;
+--card:#1C1C1E;
+--border:#2C2C2E;
+--text:#FFFFFF;
+--muted:#8E8E93;
 }
 }
 
@@ -58,11 +58,15 @@ height:100dvh;
 display:flex;
 flex-direction:column;
 justify-content:space-between;
-max-width:500px;
+max-width:520px;
 margin:auto;
 padding-top:env(safe-area-inset-top);
 padding-bottom:env(safe-area-inset-bottom);
 }
+
+/* =========================
+   VIEW SYSTEM
+========================= */
 
 .view{
 flex:1;
@@ -70,7 +74,7 @@ display:none;
 flex-direction:column;
 align-items:center;
 justify-content:center;
-padding:18px;
+padding:20px;
 }
 
 .view.active{display:flex;}
@@ -78,7 +82,13 @@ padding:18px;
 #settingsView{
 overflow-y:auto;
 -webkit-overflow-scrolling:touch;
+align-items:stretch;
+justify-content:flex-start;
 }
+
+/* =========================
+   TYPO
+========================= */
 
 h1{
 font-size:20px;
@@ -88,23 +98,38 @@ margin:0;
 }
 
 .mode-indicator{
+display:flex;
+align-items:center;
+gap:6px;
 font-size:12px;
 margin-top:4px;
 color:var(--muted);
 }
 
+.mode-dot{
+width:8px;
+height:8px;
+border-radius:50%;
+background:var(--accent);
+}
+
+/* =========================
+   SEGMENT CONTROL
+========================= */
+
 .segment{
 margin-top:14px;
 display:flex;
-background:var(--glass);
+background:var(--card);
 border-radius:20px;
 border:1px solid var(--border);
 overflow:hidden;
+width:100%;
 }
 
 .segment button{
 flex:1;
-padding:6px;
+padding:8px;
 border:none;
 background:none;
 font-size:13px;
@@ -112,70 +137,75 @@ cursor:pointer;
 }
 
 .segment button.active{
-background:var(--glass-strong);
-color:var(--accent-dark);
+background:var(--accent);
+color:white;
 }
 
+/* =========================
+   CARD
+========================= */
+
 .card{
-margin-top:14px;
+margin-top:16px;
 width:100%;
-background:var(--glass);
+background:var(--card);
 border-radius:16px;
 border:1px solid var(--border);
-padding:12px;
+padding:14px;
 display:flex;
 flex-direction:column;
-gap:6px;
+gap:8px;
 }
 
 input{
-padding:6px;
-border-radius:6px;
-border:none;
-background:var(--glass-strong);
+padding:8px;
+border-radius:8px;
+border:1px solid var(--border);
+font-size:14px;
 text-align:center;
-font-size:13px;
 }
 
 button.calc{
-padding:6px;
+padding:8px;
 border:none;
-border-radius:10px;
+border-radius:12px;
 background:var(--accent);
 color:white;
-font-size:13px;
+font-size:14px;
 cursor:pointer;
 }
 
 .result{
 margin-top:6px;
-font-size:18px;
+font-size:20px;
 font-weight:600;
 text-align:center;
 color:var(--accent-dark);
 }
 
 .comparison{
-font-size:12px;
+font-size:13px;
 text-align:center;
 color:var(--muted);
 }
 
-/* TABBAR */
+/* =========================
+   TABBAR
+========================= */
 
 .tabbar-wrapper{
-padding-bottom:22px;
+padding-bottom:20px;
 }
 
 .tabbar{
-width:88%;
+width:90%;
 margin:auto;
-height:48px;
+height:52px;
 display:flex;
 align-items:center;
 justify-content:space-around;
-background:var(--glass);
-border-radius:20px;
+background:var(--card);
+border-radius:22px;
 border:1px solid var(--border);
 }
 
@@ -183,7 +213,7 @@ border:1px solid var(--border);
 flex:1;
 border:none;
 background:none;
-font-size:13px;
+font-size:14px;
 cursor:pointer;
 color:var(--muted);
 }
@@ -192,68 +222,84 @@ color:var(--muted);
 color:var(--accent-dark);
 }
 
-/* SETTINGS */
+/* =========================
+   SETTINGS GROUPED
+========================= */
 
-.section-title{
-margin-top:16px;
+.section-label{
+margin-top:20px;
 font-size:12px;
 font-weight:600;
 color:var(--muted);
+text-transform:uppercase;
+letter-spacing:0.5px;
 }
 
-.setting-row{
+.group-card{
+margin-top:8px;
+background:var(--card);
+border-radius:16px;
+border:1px solid var(--border);
+overflow:hidden;
+}
+
+.group-row{
 display:flex;
 justify-content:space-between;
-padding:8px 0;
+align-items:center;
+padding:12px;
 border-bottom:1px solid var(--border);
-font-size:13px;
+font-size:14px;
 }
 
-.setting-row:last-child{border:none;}
+.group-row:last-child{border-bottom:none;}
+
+.color-preview{
+width:14px;
+height:14px;
+border-radius:50%;
+margin-right:10px;
+}
+
+.theme-row{
+display:flex;
+align-items:center;
+gap:10px;
+}
 
 .accordion-header{
-margin-top:16px;
+cursor:pointer;
 display:flex;
 justify-content:space-between;
-cursor:pointer;
-font-weight:600;
-font-size:13px;
-}
-
-.accordion-sub{
-font-size:11px;
-color:var(--muted);
+align-items:center;
 }
 
 .accordion-content{
 max-height:0;
 overflow:hidden;
 transition:max-height .3s ease;
-font-size:12px;
-margin-top:6px;
+padding:0 12px;
+font-size:13px;
 color:var(--muted);
+line-height:1.5;
 }
 
 .accordion-content.open{
-max-height:1000px;
-}
-
-.chevron.rotate{
-transform:rotate(180deg);
-transition:.3s;
+max-height:2000px;
+padding-bottom:12px;
 }
 
 .stat{
-margin-top:8px;
-background:var(--glass);
-border-radius:10px;
-padding:6px;
-font-size:12px;
+margin-top:10px;
+background:var(--card);
+border-radius:14px;
+padding:10px;
 text-align:center;
 border:1px solid var(--border);
+font-size:14px;
 }
 
-canvas{margin-top:8px;}
+canvas{margin-top:10px;}
 
 </style>
 </head>
@@ -261,10 +307,15 @@ canvas{margin-top:8px;}
 
 <div class="app">
 
-<!-- CALCULATOR -->
+<!-- ================= CALCULATOR ================= -->
+
 <div id="calcView" class="view active">
 <h1>Production Planner</h1>
-<div class="mode-indicator" id="modeText">Online mode active</div>
+
+<div class="mode-indicator">
+<div class="mode-dot"></div>
+<span id="modeText">Online mode active</span>
+</div>
 
 <div class="segment">
 <button id="onlineBtn" class="active">Online</button>
@@ -275,16 +326,17 @@ canvas{margin-top:8px;}
 <input type="number" id="days" placeholder="Days">
 <input type="number" id="hours" placeholder="Hours">
 <input type="number" id="minutes" placeholder="Minutes">
-<input type="number" id="units" placeholder="Units every 9s">
-<input type="number" id="manual" placeholder="Manual units">
-<input type="number" id="increase" placeholder="Increase %">
+<input type="number" id="units" placeholder="Units every 9 seconds">
+<input type="number" id="manual" placeholder="Manual units (optional)">
+<input type="number" id="increase" placeholder="Increase % (max 50)">
 <button class="calc" id="calcBtn">Calculate</button>
 <div class="result" id="result">0</div>
 <div class="comparison" id="comparison"></div>
 </div>
 </div>
 
-<!-- ANALYTICS -->
+<!-- ================= ANALYTICS ================= -->
+
 <div id="analyticsView" class="view">
 <h1>Analytics</h1>
 <canvas id="chart" height="160"></canvas>
@@ -293,38 +345,59 @@ canvas{margin-top:8px;}
 <div class="stat" id="avgProd"></div>
 </div>
 
-<!-- SETTINGS -->
+<!-- ================= SETTINGS ================= -->
+
 <div id="settingsView" class="view">
 <h1>Settings</h1>
 
-<div class="section-title">Display</div>
-<div class="setting-row">
+<div class="section-label">Display</div>
+<div class="group-card">
+<div class="group-row">
 <span>Show comparison</span>
 <input type="checkbox" id="showComparison" checked>
 </div>
-<div class="setting-row">
+<div class="group-row">
 <span>Apply 50% boost (comparison only)</span>
 <input type="checkbox" id="boostComparison">
 </div>
-
-<div class="accordion-header" onclick="toggleGuide()">
-<div>
-How to Use
-<div class="accordion-sub">Tap to expand</div>
-</div>
-<div id="chevron">▼</div>
 </div>
 
+<div class="section-label">Appearance</div>
+<div class="group-card" id="themeContainer"></div>
+
+<div class="section-label">How To Use</div>
+<div class="group-card">
+<div class="group-row accordion-header" id="guideToggle">
+<span>Tap to expand guide</span>
+<span>▼</span>
+</div>
 <div class="accordion-content" id="guideContent">
 <br>
-Online: counts full time.<br><br>
-Offline: max 7h. 1–2h 100%. 3–7h 20%.<br><br>
-Units every 9s required. Others optional.<br><br>
-Comparison shows Win/Lost %.<br><br>
-Analytics shows totals and history chart.
+<strong>Online Mode</strong><br>
+Counts the full duration you enter.<br><br>
+
+<strong>Offline Mode</strong><br>
+Maximum 7 hours are calculated.<br>
+Hours 1–2 = 100% production.<br>
+Hours 3–7 = 20% production.<br>
+This calculator assumes all relevant in-game upgrades are active.<br><br>
+
+<strong>Inputs</strong><br>
+Units every 9 seconds is required.<br>
+All other inputs are optional.<br><br>
+
+<strong>Comparison</strong><br>
+Shows percentage difference as Win or Lost.<br>
+Optional 50% boost affects comparison only.<br><br>
+
+<strong>Analytics</strong><br>
+Stores unique calculations and shows totals and averages.
+</div>
 </div>
 
 </div>
+
+<!-- ================= TABBAR ================= -->
 
 <div class="tabbar-wrapper">
 <div class="tabbar">
@@ -338,47 +411,83 @@ Analytics shows totals and history chart.
 
 <script>
 
-/* TAB SWITCH */
-document.querySelectorAll(".tabbar button").forEach(btn=>{
-btn.onclick=()=>{
-document.querySelectorAll(".tabbar button").forEach(b=>b.classList.remove("active"));
-btn.classList.add("active");
-document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
-document.getElementById(btn.dataset.tab).classList.add("active");
-};
+/* ================= STATE ================= */
+
+let mode="online";
+let historyData=JSON.parse(localStorage.getItem("history")||"[]");
+let currentTheme=localStorage.getItem("theme")||"#AEB4C2";
+
+/* ================= THEME SYSTEM ================= */
+
+const themes=[
+{name:"Pastel Grey",value:"#AEB4C2"},
+{name:"Pastel Blue",value:"#7FB9FF"},
+{name:"Pastel Pink",value:"#FF9FB9"},
+{name:"Pastel Purple",value:"#C3A6FF"},
+{name:"Pastel Orange",value:"#FFB37F"},
+{name:"Pastel Yellow",value:"#FFD97F"}
+];
+
+const themeContainer=document.getElementById("themeContainer");
+
+themes.forEach(t=>{
+const row=document.createElement("div");
+row.className="group-row";
+
+row.innerHTML=`
+<div class="theme-row">
+<div class="color-preview" style="background:${t.value}"></div>
+<span>${t.name}</span>
+</div>
+<input type="radio" name="theme" value="${t.value}">
+`;
+
+themeContainer.appendChild(row);
 });
 
-/* GUIDE */
-function toggleGuide(){
-guideContent.classList.toggle("open");
-chevron.classList.toggle("rotate");
+function applyTheme(color){
+document.documentElement.style.setProperty("--accent",color);
+document.documentElement.style.setProperty("--accent-dark",color);
+currentTheme=color;
+localStorage.setItem("theme",color);
+updateChartColor();
 }
 
-/* MODE */
-let mode="online";
-onlineBtn.onclick=()=>setMode("online");
-offlineBtn.onclick=()=>setMode("offline");
+document.querySelectorAll("input[name='theme']").forEach(r=>{
+r.onchange=()=>applyTheme(r.value);
+if(r.value===currentTheme) r.checked=true;
+});
+
+applyTheme(currentTheme);
+
+/* ================= MODE ================= */
 
 function setMode(m){
 mode=m;
 onlineBtn.classList.toggle("active",m==="online");
 offlineBtn.classList.toggle("active",m==="offline");
-modeText.innerText=m==="online"?"Online mode active":"Offline mode active";
+modeText.textContent=m==="online"?"Online mode active":"Offline mode active";
 days.disabled=(m==="offline");
 }
 
-/* CALCULATION */
-let historyData=JSON.parse(localStorage.getItem("history")||"[]");
+onlineBtn.onclick=()=>setMode("online");
+offlineBtn.onclick=()=>setMode("offline");
 
-function format(n){return Math.round(n).toLocaleString("de-DE");}
+/* ================= CALCULATION ================= */
 
-function calcOnline(sec,u,man){return (sec/9)*u+man;}
+function calculateOnline(sec,u,man){
+return (sec/9)*u+man;
+}
 
-function calcOffline(sec,u,man){
+function calculateOffline(sec,u,man){
 let hours=Math.min(sec/3600,7);
 let firstTwo=Math.min(hours,2);
 let rest=Math.max(hours-2,0);
 return (firstTwo*3600/9)*u+(rest*3600/9)*u*0.2+man;
+}
+
+function format(n){
+return Math.round(n).toLocaleString("de-DE");
 }
 
 calcBtn.onclick=()=>{
@@ -391,23 +500,22 @@ let inc=+increase.value||0;
 if(inc>50)inc=50;
 
 let sec=d*86400+h*3600+m*60;
-
-let base=(mode==="online"?calcOnline(sec,u,man):calcOffline(sec,u,man));
+let base=(mode==="online"?calculateOnline(sec,u,man):calculateOffline(sec,u,man));
 base*=1+inc/100;
 
-result.innerText=format(base);
+result.textContent=format(base);
 
-/* SAVE ONLY IF DIFFERENT */
+/* Save unique */
 if(historyData[historyData.length-1]!==base){
 historyData.push(base);
 localStorage.setItem("history",JSON.stringify(historyData));
 updateAnalytics();
 }
 
-/* COMPARISON */
+/* Comparison */
 if(showComparison.checked){
-let onlineVal=calcOnline(sec,u,man);
-let offlineVal=calcOffline(sec,u,man);
+let onlineVal=calculateOnline(sec,u,man);
+let offlineVal=calculateOffline(sec,u,man);
 
 if(boostComparison.checked){
 let hours=Math.min(sec/3600,7);
@@ -418,21 +526,30 @@ offlineVal+=(rest*3600/9)*u*0.5;
 }
 
 let compareTo=mode==="online"?offlineVal:onlineVal;
+if(compareTo>0){
 let diff=((base-compareTo)/compareTo)*100;
-comparison.innerText=(diff>=0?"+":"")+Math.round(diff)+"% "+
-(diff>=0?"Win":"Lost")+" in comparison to "+(mode==="online"?"Offline":"Online");
+comparison.textContent=
+(diff>=0?"+":"")+Math.round(diff)+"% "+
+(diff>=0?"Win":"Lost")+" in comparison to "+
+(mode==="online"?"Offline":"Online");
+}
 }else{
-comparison.innerText="";
+comparison.textContent="";
 }
 };
 
-/* ANALYTICS */
+/* ================= ANALYTICS ================= */
 
 let chart=new Chart(document.getElementById("chart"),{
-type:'line',
-data:{labels:[],datasets:[{data:[],borderColor:"#8F96A6",fill:false,tension:.3}]},
+type:"line",
+data:{labels:[],datasets:[{data:[],borderColor:currentTheme,fill:false,tension:.3}]},
 options:{plugins:{legend:{display:false}}}
 });
+
+function updateChartColor(){
+chart.data.datasets[0].borderColor=currentTheme;
+chart.update();
+}
 
 function updateAnalytics(){
 chart.data.labels=historyData.map((_,i)=>i+1);
@@ -440,12 +557,29 @@ chart.data.datasets[0].data=historyData;
 chart.update();
 
 let total=historyData.reduce((a,b)=>a+b,0);
-totalCalc.innerText="Total Calculations: "+historyData.length;
-totalProd.innerText="Total Production: "+format(total);
-avgProd.innerText="Average Production: "+format(total/historyData.length||0);
+totalCalc.textContent="Total calculations: "+historyData.length;
+totalProd.textContent="Total production: "+format(total);
+avgProd.textContent="Average production: "+format(total/historyData.length||0);
 }
 
 updateAnalytics();
+
+/* ================= GUIDE ================= */
+
+guideToggle.onclick=()=>{
+guideContent.classList.toggle("open");
+};
+
+/* ================= TAB SWITCH ================= */
+
+document.querySelectorAll(".tabbar button").forEach(btn=>{
+btn.onclick=()=>{
+document.querySelectorAll(".tabbar button").forEach(b=>b.classList.remove("active"));
+btn.classList.add("active");
+document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+document.getElementById(btn.dataset.tab).classList.add("active");
+};
+});
 
 </script>
 </body>
